@@ -3,53 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bot Traffic Generator | GitHub Tool</title>
+    <title>Bot Traffic v2</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <h1>🚀 Traffic Bot Pro</h1>
-            <p>Simple tools for website stress testing</p>
-        </div>
+<div class="container">
+    <div class="header">
+        <h1>🚀 Traffic Bot Pro</h1>
+        <p>Simple Stress Test Tool</p>
+    </div>
 
-        <div class="input-group">
-            <label>Target URL</label>
-            <input type="text" id="targetUrl" placeholder="https://website-kamu.com" autocomplete="off">
-        </div>
+    <div style="margin-bottom: 20px;">
+        <label>Target URL</label>
+        <input type="text" id="targetUrl" placeholder="https://example.com">
+    </div>
 
-        <div class="settings">
-            <div class="input-sub">
-                <label>Interval (Detik)</label>
-                <input type="number" id="intervalTime" value="3" min="1">
-            </div>
-            <div class="input-sub">
-                <label>Threads (Jumlah Jendela)</label>
-                <input type="number" id="threads" value="1" min="1" max="5">
-            </div>
+    <div class="row">
+        <div class="col">
+            <label>Interval (Detik)</label>
+            <input type="number" id="intervalTime" value="3">
         </div>
-        
-        <div class="actions">
-            <button class="btn start" onclick="toggleBot()" id="mainBtn">START ENGINE</button>
-        </div>
-        
-        <div class="stats-grid">
-            <div class="stat-card">
-                <span class="stat-label">Total Hits</span>
-                <div class="counter" id="countDisplay">0</div>
-            </div>
-            <div class="stat-card">
-                <span class="stat-label">Status</span>
-                <div id="statusText" style="color: #ff4d4d; font-weight: bold;">IDLE</div>
-            </div>
-        </div>
-
-        <div class="log-container" id="logBox">
-            <p>> System ready...</p>
+        <div class="col">
+            <label>Threads</label>
+            <input type="number" id="threads" value="1">
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <button class="btn start" id="mainBtn" onclick="toggleBot()">Start Engine</button>
+
+    <div class="stats-container">
+        <div class="stat-card">
+            <label>Total Hits</label>
+            <span class="stat-val" id="countDisplay">0</span>
+        </div>
+        <div class="stat-card">
+            <label>Status</label>
+            <span class="stat-val" id="statusText" style="color:var(--danger)">IDLE</span>
+        </div>
+    </div>
+
+    <div class="log-box" id="logBox">> System ready...</div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
