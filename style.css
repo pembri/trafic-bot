@@ -1,0 +1,109 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0f172a;
+    color: #f8fafc;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    background: #1e293b;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    width: 100%;
+    max-width: 450px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #38bdf8;
+}
+
+.header p {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    margin-bottom: 2rem;
+}
+
+.input-group, .settings {
+    text-align: left;
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+    color: #38bdf8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+input {
+    width: 100%;
+    padding: 0.8rem;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 0.5rem;
+    color: white;
+    box-sizing: border-box;
+}
+
+.settings {
+    display: flex;
+    gap: 1rem;
+}
+
+.input-sub {
+    flex: 1;
+}
+
+.btn {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 1rem;
+}
+
+.start { background: #38bdf8; color: #0f172a; }
+.start:hover { background: #0ea5e9; transform: translateY(-2px); }
+.stop { background: #ef4444; color: white; }
+
+.stats-grid {
+    display: flex;
+    margin-top: 2rem;
+    gap: 1rem;
+}
+
+.stat-card {
+    flex: 1;
+    background: #0f172a;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid #38bdf8;
+}
+
+.stat-label { font-size: 0.7rem; color: #94a3b8; display: block; }
+.counter { font-size: 1.5rem; font-weight: bold; }
+
+.log-container {
+    margin-top: 1.5rem;
+    background: #000;
+    height: 80px;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    overflow-y: auto;
+    text-align: left;
+    color: #4ade80;
+}
