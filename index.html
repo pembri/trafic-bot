@@ -3,48 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hacker Traffic Bot</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Hacker Bot V4 - Single File</title>
+    <style>
+        /* SEMUA CSS MASUK SINI */
+        :root {
+            --bg: #0d1117;
+            --panel: #161b22;
+            --accent: #5de4c7;
+            --text: #c9d1d9;
+            --border: #30363d;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .terminal-container {
+            background: var(--panel);
+            width: 100%;
+            max-width: 380px;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+        }
+
+        h1 { font-size: 1.1rem; color: var(--accent); text-align: center; text-transform: uppercase; margin: 0 0 20px 0; }
+
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.75rem; color: #8b949e; margin-bottom: 5px; }
+
+        input {
+            width: 100%;
+            background: #000;
+            border: 1px solid var(--border);
+            color: var(--accent);
+            padding: 10px;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .row { display: flex; gap: 10px; }
+        .col { flex: 1; }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            margin-top: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            border-radius: 4px;
+        }
+
+        .start { background: #238636; color: #fff; }
+        .stop { background: #da3633; color: #fff; }
+
+        #statsPanel {
+            display: none; /* Tersembunyi di awal */
+            margin-top: 15px;
+            padding: 10px;
+            background: #000;
+            border: 1px dashed var(--border);
+        }
+
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .stat-item { text-align: center; }
+        .stat-label { font-size: 0.65rem; color: #8b949e; display: block; }
+        .stat-val { font-size: 1.1rem; font-weight: bold; color: #fff; }
+
+        .log-box {
+            background: #000;
+            height: 100px;
+            border-radius: 4px;
+            padding: 8px;
+            font-size: 0.65rem;
+            color: #4ade80;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            margin-top: 15px;
+        }
+    </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>[ TRAFFIC_BOT_V3 ]</h1>
+<div class="terminal-container">
+    <h1>[ COMMAND_CENTER ]</h1>
 
-    <div id="inputPanel">
-        <label>Target URL</label>
-        <input type="text" id="targetUrl" placeholder="https://target-site.com">
-        
-        <div style="display:flex; gap:10px;">
-            <div style="flex:1">
-                <label>Interval (s)</label>
-                <input type="number" id="intervalTime" value="3">
-            </div>
-            <div style="flex:1">
-                <label>Threads</label>
-                <input type="number" id="threads" value="1">
-            </div>
+    <div class="input-group">
+        <label>TARGET URL</label>
+        <input type="text" id="targetUrl" placeholder="https://target.com">
+    </div>
+    
+    <div class="row input-group">
+        <div class="col">
+            <label>INTERVAL (S)</label>
+            <input type="number" id="intervalTime" value="3">
+        </div>
+        <div class="col">
+            <label>THREADS</label>
+            <input type="number" id="threads" value="1">
         </div>
     </div>
 
-    <button class="btn start" id="mainBtn" onclick="toggleBot()">Execute Engine</button>
+    <button class="btn start" id="mainBtn" onclick="toggleBot()">EXECUTE ENGINE</button>
 
     <div id="statsPanel">
         <div class="stats-grid">
-            <div class="stat-card">
-                <label style="margin:0">HITS</label>
+            <div class="stat-item">
+                <span class="stat-label">HITS</span>
                 <span class="stat-val" id="countDisplay">0</span>
             </div>
-            <div class="stat-card">
-                <label style="margin:0">STATUS</label>
-                <span class="stat-val" id="statusText" style="color:var(--accent)">RUNNING</span>
+            <div class="stat-item">
+                <span class="stat-label">STATUS</span>
+                <span class="stat-val" id="statusText">IDLE</span>
             </div>
         </div>
     </div>
 
-    <div class="terminal" id="logBox">> System ready. Awaiting command...</div>
+    <div class="log-box" id="logBox">> Awaiting operator command...</div>
 </div>
 
-<script src="script.js"></script>
+<script>
+    /* SEMUA LOGIKA JAVASCRIPT MASUK SINI */
+    let isRunning = false;
+    let count = 0;
+    let botInterval;
+
+    function addLog(msg) {
+        const box = document.getElementById('logBox');
+        const time = new Date().toLocaleTimeString('id-ID');
+        box.innerHTML += `<div>[${time}] ${msg}</div>`;
+        box.scrollTop = box.scrollHeight;
+    }
+
+    function toggleBot() {
+        const btn = document.getElementById('mainBtn');
+        const stats = document.getElementById('statsPanel');
+        const url = document.getElementById('targetUrl').value;
+        const interval = document.getElementById('intervalTime').value * 1000;
+        const threads = document.getElementById('threads').value;
+        const statusLabel = document.getElementById('statusText');
+
+        if (!isRunning) {
+            if (!url || !url.startsWith('http')) {
+                alert("Gunakan URL lengkap! (http/https)");
+                return;
+            }
+            
+            isRunning = true;
+            btn.innerText = "TERMINATE ENGINE";
+            btn.className = "btn stop";
+            
+            stats.style.display = "block";
+            statusLabel.innerText = "RUNNING";
+            statusLabel.style.color = "#238636";
+            
+            addLog("System initialized. Target: " + url);
+
+            botInterval = setInterval(() => {
+                for (let i = 0; i < threads; i++) {
+                    const ifr = document.createElement('iframe');
+                    ifr.style.display = 'none';
+                    // Tambah cache bust agar request selalu baru
+                    ifr.src = url + "?v=" + Math.random();
+                    document.body.appendChild(ifr);
+                    // Hapus iframe setelah load agar memori tetap lega
+                    setTimeout(() => ifr.remove(), 2500);
+                }
+                count += parseInt(threads);
+                document.getElementById('countDisplay').innerText = count;
+                addLog(`Injected ${threads} hits to node... OK`);
+            }, interval);
+
+        } else {
+            isRunning = false;
+            btn.innerText = "EXECUTE ENGINE";
+            btn.className = "btn start";
+            
+            statusLabel.innerText = "IDLE";
+            statusLabel.style.color = "#da3633";
+            clearInterval(botInterval);
+            addLog("Sequence terminated by user.");
+        }
+    }
+</script>
+
 </body>
 </html>
