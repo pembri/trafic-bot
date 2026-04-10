@@ -1,13 +1,13 @@
 :root {
-    --bg: #0f172a;
-    --card: #1e293b;
-    --accent: #38bdf8;
-    --danger: #ef4444;
-    --text: #f8fafc;
+    --bg: #0a0a0c;
+    --card: #141417;
+    --accent: #00ff41; /* Hijau Matrix */
+    --danger: #ff3e3e;
+    --text: #e0e0e0;
 }
 
 body {
-    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-family: 'Courier New', monospace;
     background-color: var(--bg);
     color: var(--text);
     margin: 0;
@@ -23,105 +23,72 @@ body {
     width: 100%;
     max-width: 400px;
     padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-    box-sizing: border-box;
+    border-radius: 12px;
+    border: 1px solid #333;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
 }
 
-h1 {
-    font-size: 1.5rem;
-    margin: 0 0 5px 0;
-    color: var(--accent);
-    text-align: center;
-}
+h1 { font-size: 1.2rem; color: var(--accent); text-align: center; text-transform: uppercase; letter-spacing: 2px; }
 
-.header p {
-    font-size: 0.8rem;
-    color: #94a3b8;
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-/* Biar sejajar kanan-kiri */
-.row {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.col {
-    flex: 1;
-}
-
-label {
-    display: block;
-    font-size: 0.7rem;
-    font-weight: bold;
-    color: var(--accent);
-    margin-bottom: 8px;
-    text-transform: uppercase;
-}
+label { display: block; font-size: 0.7rem; color: var(--accent); margin: 15px 0 5px; }
 
 input {
     width: 100%;
-    background: #0f172a;
-    border: 1px solid #334155;
-    color: white;
+    background: #000;
+    border: 1px solid #444;
+    color: var(--accent);
     padding: 12px;
-    border-radius: 10px;
+    border-radius: 4px;
     box-sizing: border-box;
-    font-size: 1rem;
-}
-
-input:focus {
-    border-color: var(--accent);
-    outline: none;
 }
 
 .btn {
     width: 100%;
     padding: 15px;
     border: none;
-    border-radius: 12px;
-    font-weight: 800;
-    font-size: 1rem;
+    margin-top: 20px;
+    font-weight: bold;
     cursor: pointer;
-    transition: 0.2s;
-    margin-bottom: 25px;
     text-transform: uppercase;
 }
 
-.start { background: var(--accent); color: #0f172a; }
-.stop { background: var(--danger); color: white; }
+.start { background: var(--accent); color: #000; }
+.stop { background: var(--danger); color: #fff; }
 
-.stats-container {
+/* Panel Stats - Tersembunyi di awal */
+#statsPanel {
+    display: none;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px dashed #444;
+}
+
+.stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    gap: 10px;
     margin-bottom: 20px;
 }
 
 .stat-card {
-    background: #0f172a;
-    padding: 15px;
-    border-radius: 12px;
+    background: #000;
+    padding: 10px;
+    border: 1px solid var(--accent);
     text-align: center;
 }
 
-.stat-val {
-    font-size: 1.4rem;
-    font-weight: bold;
-    display: block;
-}
+.stat-val { font-size: 1.2rem; font-weight: bold; color: #fff; }
 
-.log-box {
+/* Gaya Terminal Hacker */
+.terminal {
     background: #000;
-    height: 100px;
-    border-radius: 10px;
+    height: 120px;
+    border-radius: 4px;
     padding: 10px;
-    font-family: 'Courier New', monospace;
-    font-size: 0.7rem;
-    color: #4ade80;
+    font-size: 0.65rem;
+    color: var(--accent);
     overflow-y: auto;
-    border: 1px solid #334155;
+    border: 1px solid #333;
+    margin-top: 15px;
+    box-shadow: inset 0 0 10px rgba(0,255,65,0.1);
 }
