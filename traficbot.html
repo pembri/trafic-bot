@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Traffic Bot</title>
+    <title>Traffic Bot + Analysis</title>
     <style>
         :root {
             --bg: #0d1117;
@@ -13,6 +13,7 @@
             --border: #30363d;
             --danger: #da3633;
             --success: #238636;
+            --warning: #f1e05a;
         }
 
         body {
@@ -20,7 +21,7 @@
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
-            padding: 15px;
+            padding: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -30,49 +31,41 @@
         .terminal-container {
             background: var(--panel);
             width: 100%;
-            max-width: 380px;
+            max-width: 400px;
             padding: 20px;
             border-radius: 12px;
             border: 1px solid var(--border);
             box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            box-sizing: border-box;
         }
 
-        h1 { 
-            font-size: 1.2rem; 
-            color: var(--accent); 
-            text-align: center; 
-            text-transform: uppercase; 
-            margin: 0 0 20px 0;
-            letter-spacing: 2px;
-        }
+        h1 { font-size: 1.1rem; color: var(--accent); text-align: center; margin: 0 0 15px 0; letter-spacing: 1px; }
 
-        .input-group { margin-bottom: 15px; }
-        label { display: block; font-size: 0.7rem; color: #8b949e; margin-bottom: 5px; font-weight: bold; }
+        label { display: block; font-size: 0.65rem; color: #8b949e; margin-bottom: 5px; text-transform: uppercase; }
 
         input {
             width: 100%;
             background: #000;
             border: 1px solid var(--border);
             color: var(--accent);
-            padding: 12px;
+            padding: 10px;
             border-radius: 6px;
             box-sizing: border-box;
             font-size: 0.9rem;
+            margin-bottom: 12px;
         }
 
-        .row { display: flex; gap: 10px; }
+        .row { display: flex; gap: 8px; }
         .col { flex: 1; }
 
         .btn {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             border: none;
-            margin-top: 15px;
             font-weight: bold;
             cursor: pointer;
             text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
+            font-size: 0.8rem;
             border-radius: 6px;
             transition: 0.3s;
         }
@@ -80,71 +73,80 @@
         .start { background: var(--success); color: #fff; }
         .stop { background: var(--danger); color: #fff; }
 
-        #statsPanel {
+        /* ANALISIS PANEL */
+        #analysisPanel {
             display: none;
-            margin-top: 20px;
-            padding: 15px;
+            margin-top: 15px;
+            padding: 12px;
             background: #000;
             border: 1px solid var(--border);
             border-radius: 6px;
         }
 
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .stat-item { text-align: center; }
-        .stat-label { font-size: 0.6rem; color: #8b949e; display: block; margin-bottom: 5px; }
-        .stat-val { font-size: 1.3rem; font-weight: bold; color: #fff; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;}
+        .stat-item { text-align: center; border: 1px solid #222; padding: 8px; border-radius: 4px; }
+        .stat-val { font-size: 1.2rem; font-weight: bold; display: block; }
+
+        /* NETWORK MONITOR */
+        .monitor-header { font-size: 0.65rem; color: var(--accent); margin-bottom: 5px; display: flex; justify-content: space-between; }
+        .progress-bar { height: 4px; background: #222; border-radius: 2px; overflow: hidden; margin-bottom: 10px; }
+        .progress-fill { height: 100%; width: 0%; background: var(--accent); transition: 0.3s; }
 
         .log-box {
-            background: #000;
-            height: 120px;
-            border-radius: 6px;
-            padding: 10px;
-            font-size: 0.65rem;
+            background: #050505;
+            height: 100px;
+            border-radius: 4px;
+            padding: 8px;
+            font-size: 0.6rem;
             color: #4ade80;
             overflow-y: auto;
-            border: 1px solid var(--border);
-            margin-top: 15px;
-            line-height: 1.4;
+            border: 1px solid #222;
         }
     </style>
 </head>
 <body>
 
 <div class="terminal-container">
-    <h1>[ TRAFFIC BOT ]</h1>
+    <h1>[ TRAFFIC BOT + ANALYSIS ]</h1>
 
     <div class="input-group">
-        <label>TARGET URL</label>
-        <input type="text" id="targetUrl" placeholder="https://website-kamu.com">
+        <label>Target Node URL</label>
+        <input type="text" id="targetUrl" placeholder="https://target-website.com">
     </div>
     
-    <div class="row input-group">
+    <div class="row">
         <div class="col">
-            <label>INTERVAL (DETIK)</label>
+            <label>Interval (s)</label>
             <input type="number" id="intervalTime" value="3">
         </div>
         <div class="col">
-            <label>THREADS</label>
+            <label>Threads</label>
             <input type="number" id="threads" value="1">
         </div>
     </div>
 
     <button class="btn start" id="mainBtn" onclick="toggleBot()">Execute Engine</button>
 
-    <div id="statsPanel">
+    <div id="analysisPanel">
+        <div class="monitor-header">
+            <span>NETWORK DATA TRANSFER</span>
+            <span id="loadPercent">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="bar"></div></div>
+
         <div class="stats-grid">
             <div class="stat-item">
-                <span class="stat-label">TOTAL HITS</span>
+                <label>HITS</label>
                 <span class="stat-val" id="countDisplay">0</span>
             </div>
             <div class="stat-item">
-                <span class="stat-label">STATUS</span>
-                <span class="stat-val" id="statusText">IDLE</span>
+                <label>SIGNAL</label>
+                <span class="stat-val" id="signalStatus" style="color:var(--warning)">STABLE</span>
             </div>
         </div>
-    </div>
 
-    <div class="log-box" id="logBox">> System ready. Awaiting command...</div>
+        <div class="log-box" id="logBox">> Analysis tool standby...</div>
+    </div>
 </div>
 
 <script>
@@ -161,50 +163,61 @@
 
     function toggleBot() {
         const btn = document.getElementById('mainBtn');
-        const stats = document.getElementById('statsPanel');
+        const analysis = document.getElementById('analysisPanel');
         const url = document.getElementById('targetUrl').value;
         const interval = document.getElementById('intervalTime').value * 1000;
-        const threads = document.getElementById('threads').value;
-        const statusLabel = document.getElementById('statusText');
+        const threads = parseInt(document.getElementById('threads').value);
+        const signal = document.getElementById('signalStatus');
+        const bar = document.getElementById('bar');
 
         if (!isRunning) {
-            if (!url || !url.startsWith('http')) {
-                alert("Masukkan URL lengkap (http:// atau https://)");
-                return;
-            }
+            if (!url.startsWith('http')) return alert("Gunakan URL Lengkap!");
             
             isRunning = true;
             btn.innerText = "Terminate Engine";
             btn.className = "btn stop";
-            
-            stats.style.display = "block";
-            statusLabel.innerText = "RUNNING";
-            statusLabel.style.color = "#4ade80";
-            
-            addLog("Engine started. Target: " + url);
+            analysis.style.display = "block";
+            addLog("System inisialisasi...");
 
             botInterval = setInterval(() => {
+                let successHits = 0;
+                bar.style.width = "100%";
+                document.getElementById('loadPercent').innerText = "100%";
+
                 for (let i = 0; i < threads; i++) {
                     const ifr = document.createElement('iframe');
                     ifr.style.display = 'none';
                     ifr.src = url + "?v=" + Math.random();
+                    
+                    // Event listener untuk membuktikan adanya respon data
+                    ifr.onload = function() {
+                        successHits++;
+                        addLog(`Node [${i+1}] data received.`);
+                    };
+
                     document.body.appendChild(ifr);
-                    setTimeout(() => ifr.remove(), 2500);
+                    setTimeout(() => {
+                        ifr.remove();
+                        bar.style.width = "0%";
+                        document.getElementById('loadPercent').innerText = "0%";
+                    }, 2000);
                 }
-                count += parseInt(threads);
+
+                count += threads;
                 document.getElementById('countDisplay').innerText = count;
-                addLog(`Injected ${threads} hits... SUCCESS`);
+                signal.innerText = "ACTIVE";
+                signal.style.color = "var(--accent)";
+                addLog(`Injected ${threads} payload(s) to target.`);
             }, interval);
 
         } else {
             isRunning = false;
             btn.innerText = "Execute Engine";
             btn.className = "btn start";
-            
-            statusLabel.innerText = "IDLE";
-            statusLabel.style.color = "#da3633";
+            signal.innerText = "OFFLINE";
+            signal.style.color = "var(--danger)";
             clearInterval(botInterval);
-            addLog("Engine terminated by operator.");
+            addLog("Execution stopped by operator.");
         }
     }
 </script>
