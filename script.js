@@ -11,20 +11,22 @@ function addLog(msg) {
 
 function toggleBot() {
     const btn = document.getElementById('mainBtn');
+    const stats = document.getElementById('statsPanel');
     const url = document.getElementById('targetUrl').value;
     const interval = document.getElementById('intervalTime').value * 1000;
     const threads = document.getElementById('threads').value;
-    const statusText = document.getElementById('statusText');
 
     if (!isRunning) {
         if (!url.startsWith('http')) return alert("Gunakan http:// atau https://");
         
         isRunning = true;
-        btn.innerText = "Stop Engine";
+        btn.innerText = "Terminate Engine";
         btn.className = "btn stop";
-        statusText.innerText = "RUNNING";
-        statusText.style.color = "#4ade80";
-        addLog("Bot Started...");
+        
+        // MUNCULKAN PANEL STATS
+        stats.style.display = "block";
+        
+        addLog("Initializing attack on target...");
 
         botInterval = setInterval(() => {
             for (let i = 0; i < threads; i++) {
@@ -36,15 +38,19 @@ function toggleBot() {
             }
             count += parseInt(threads);
             document.getElementById('countDisplay').innerText = count;
-            addLog(`Sent ${threads} hits...`);
+            addLog(`Injecting ${threads} payloads... SUCCESS`);
         }, interval);
     } else {
         isRunning = false;
-        btn.innerText = "Start Engine";
+        btn.innerText = "Execute Engine";
         btn.className = "btn start";
-        statusText.innerText = "IDLE";
-        statusText.style.color = "var(--danger)";
+        
+        // SEMBUNYIKAN PANEL STATS LAGI (Optional, kalau mau tetap kelihatan hapus baris bawah ini)
+        // stats.style.display = "none";
+        
+        document.getElementById('statusText').innerText = "STOPPED";
+        document.getElementById('statusText').style.color = "var(--danger)";
         clearInterval(botInterval);
-        addLog("Bot Stopped.");
+        addLog("Process terminated by operator.");
     }
 }
