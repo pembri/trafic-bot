@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Bot</title>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --panel: #161b22;
+            --accent: #5de4c7;
+            --text: #c9d1d9;
+            --border: #30363d;
+            --danger: #da3633;
+            --success: #238636;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .terminal-container {
+            background: var(--panel);
+            width: 100%;
+            max-width: 380px;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+        }
+
+        h1 { 
+            font-size: 1.2rem; 
+            color: var(--accent); 
+            text-align: center; 
+            text-transform: uppercase; 
+            margin: 0 0 20px 0;
+            letter-spacing: 2px;
+        }
+
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.7rem; color: #8b949e; margin-bottom: 5px; font-weight: bold; }
+
+        input {
+            width: 100%;
+            background: #000;
+            border: 1px solid var(--border);
+            color: var(--accent);
+            padding: 12px;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 0.9rem;
+        }
+
+        .row { display: flex; gap: 10px; }
+        .col { flex: 1; }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            margin-top: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
+
+        .start { background: var(--success); color: #fff; }
+        .stop { background: var(--danger); color: #fff; }
+
+        #statsPanel {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: #000;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .stat-item { text-align: center; }
+        .stat-label { font-size: 0.6rem; color: #8b949e; display: block; margin-bottom: 5px; }
+        .stat-val { font-size: 1.3rem; font-weight: bold; color: #fff; }
+
+        .log-box {
+            background: #000;
+            height: 120px;
+            border-radius: 6px;
+            padding: 10px;
+            font-size: 0.65rem;
+            color: #4ade80;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            margin-top: 15px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+<div class="terminal-container">
+    <h1>[ TRAFFIC BOT ]</h1>
+
+    <div class="input-group">
+        <label>TARGET URL</label>
+        <input type="text" id="targetUrl" placeholder="https://website-kamu.com">
+    </div>
+    
+    <div class="row input-group">
+        <div class="col">
+            <label>INTERVAL (DETIK)</label>
+            <input type="number" id="intervalTime" value="3">
+        </div>
+        <div class="col">
+            <label>THREADS</label>
+            <input type="number" id="threads" value="1">
+        </div>
+    </div>
+
+    <button class="btn start" id="mainBtn" onclick="toggleBot()">Execute Engine</button>
+
+    <div id="statsPanel">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-label">TOTAL HITS</span>
+                <span class="stat-val" id="countDisplay">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">STATUS</span>
+                <span class="stat-val" id="statusText">IDLE</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="log-box" id="logBox">> System ready. Awaiting command...</div>
+</div>
+
+<script>
+    let isRunning = false;
+    let count = 0;
+    let botInterval;
+
+    function addLog(msg) {
+        const box = document.getElementById('logBox');
+        const time = new Date().toLocaleTimeString('id-ID');
+        box.innerHTML += `<div>[${time}] ${msg}</div>`;
+        box.scrollTop = box.scrollHeight;
+    }
+
+    function toggleBot() {
+        const btn = document.getElementById('mainBtn');
+        const stats = document.getElementById('statsPanel');
+        const url = document.getElementById('targetUrl').value;
+        const interval = document.getElementById('intervalTime').value * 1000;
+        const threads = document.getElementById('threads').value;
+        const statusLabel = document.getElementById('statusText');
+
+        if (!isRunning) {
+            if (!url || !url.startsWith('http')) {
+                alert("Masukkan URL lengkap (http:// atau https://)");
+                return;
+            }
+            
+            isRunning = true;
+            btn.innerText = "Terminate Engine";
+            btn.className = "btn stop";
+            
+            stats.style.display = "block";
+            statusLabel.innerText = "RUNNING";
+            statusLabel.style.color = "#4ade80";
+            
+            addLog("Engine started. Target: " + url);
+
+            botInterval = setInterval(() => {
+                for (let i = 0; i < threads; i++) {
+                    const ifr = document.createElement('iframe');
+                    ifr.style.display = 'none';
+                    ifr.src = url + "?v=" + Math.random();
+                    document.body.appendChild(ifr);
+                    setTimeout(() => ifr.remove(), 2500);
+                }
+                count += parseInt(threads);
+                document.getElementById('countDisplay').innerText = count;
+                addLog(`Injected ${threads} hits... SUCCESS`);
+            }, interval);
+
+        } else {
+            isRunning = false;
+            btn.innerText = "Execute Engine";
+            btn.className = "btn start";
+            
+            statusLabel.innerText = "IDLE";
+            statusLabel.style.color = "#da3633";
+            clearInterval(botInterval);
+            addLog("Engine terminated by operator.");
+        }
+    }
+</script>
+
+</body>
+</html>
