@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZenTranslate - Alat Penerjemah Ringan</title>
+    <title>ZenTranslate ELITE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --p: #6366f1; --s: #a855f7; --accent: #4ade80;
-            --bg: #030712; --card: rgba(17, 24, 39, 0.8);
+            --bg: #030712; --card: rgba(17, 24, 39, 0.85);
         }
 
         body {
@@ -21,7 +21,7 @@
         .app-container {
             width: 100%; max-width: 450px; background: var(--card);
             backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 35px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            border-radius: 35px; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
             overflow: hidden; animation: fadeIn 0.8s ease;
         }
 
@@ -56,10 +56,10 @@
         
         textarea {
             width: 100%; background: transparent; border: none; color: #fff;
-            font-size: 1.1rem; resize: none; outline: none; min-height: 100px;
+            font-size: 1.1rem; resize: none; outline: none; min-height: 100px; line-height: 1.5;
         }
 
-        .res-text { color: var(--accent); font-size: 1.1rem; min-height: 50px; line-height: 1.6; }
+        .res-text { color: var(--accent); font-size: 1.1rem; min-height: 50px; line-height: 1.6; word-wrap: break-word; }
 
         .action-bar {
             display: flex; gap: 15px; margin-top: 15px;
@@ -68,13 +68,10 @@
 
         .btn-premium {
             background: rgba(255,255,255,0.05); border: none; color: #94a3b8;
-            padding: 10px; border-radius: 12px; cursor: pointer; transition: 0.2s;
-            display: flex; align-items: center; gap: 8px; font-size: 0.75rem;
+            padding: 10px 15px; border-radius: 12px; cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 600;
         }
-        .btn-premium:hover { background: rgba(255,255,255,0.1); color: #fff; }
-        .btn-premium.active { color: #f87171; animation: pulse 1.5s infinite; }
-
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        .btn-premium:hover { background: rgba(255,255,255,0.15); color: #fff; }
 
         .status-badge {
             text-align: center; font-size: 0.6rem; color: #4b5563;
@@ -94,10 +91,10 @@
     </div>
 
     <div class="input-box">
-        <textarea id="inputText" placeholder="Ketik atau gunakan Mic..." oninput="trigger()"></textarea>
+        <textarea id="inputText" placeholder="Ketik sesuatu di sini..." oninput="trigger()"></textarea>
         <div class="action-bar">
-            <button class="btn-premium" id="micBtn" onclick="toggleMic()">
-                <i class="fas fa-microphone"></i> VOICE
+            <button class="btn-premium" onclick="speakInput()">
+                <i class="fas fa-volume-up"></i> LISTEN INPUT
             </button>
             <button class="btn-premium" onclick="clearText()">
                 <i class="fas fa-trash"></i> CLEAR
@@ -105,11 +102,11 @@
         </div>
     </div>
 
-    <div class="output-box" style="background: rgba(255,255,255,0.01);">
+    <div class="output-box" style="background: rgba(255,255,255,0.02);">
         <div id="outputText" class="res-text">...</div>
         <div class="action-bar">
-            <button class="btn-premium" onclick="speakResult()">
-                <i class="fas fa-volume-up"></i> LISTEN
+            <button class="btn-premium" onclick="speakOutput()" style="color: var(--accent); border: 1px solid rgba(74, 222, 128, 0.2);">
+                <i class="fas fa-play-circle"></i> LISTEN RESULT
             </button>
             <button class="btn-premium" onclick="copyResult()">
                 <i class="fas fa-copy"></i> COPY
@@ -117,30 +114,28 @@
         </div>
     </div>
 
-    <div class="status-badge" id="status">ELITE ENGINE READY</div>
+    <div class="status-badge" id="status">PREMIUM AUDIO ENGINE ACTIVE</div>
 </div>
 
 <script>
-    // Database Bahasa Premium (Full List)
-    const langs = {"af":"Afrikaans","sq":"Albanian","am":"Amharic","ar":"Arabic","hy":"Armenian","az":"Azerbaijani","eu":"Basque","be":"Belarusian","bn":"Bengali","bs":"Bosnian","bg":"Bulgarian","ca":"Catalan","ceb":"Cebuano","ny":"Chichewa","zh-CN":"Chinese (Simplified)","zh-TW":"Chinese (Traditional)","co":"Corsican","hr":"Croatian","cs":"Czech","da":"Danish","nl":"Dutch","en":"English","eo":"Esperanto","et":"Estonian","tl":"Filipino","fi":"Finnish","fr":"French","fy":"Frisian","gl":"Galician","ka":"Georgian","de":"German","el":"Greek","gu":"Gujarati","ht":"Haitian Creole","ha":"Hausa","haw":"Hawaiian","iw":"Hebrew","hi":"Hindi","hmn":"Hmong","hu":"Hungarian","is":"Icelandic","ig":"Igbo","id":"Indonesian","ga":"Irish","it":"Italian","ja":"Japanese","jw":"Javanese","kn":"Kannada","kk":"Kazakh","km":"Khmer","ko":"Korean","ku":"Kurdish (Kurmanji)","ky":"Kyrgyz","lo":"Lao","la":"Latin","lv":"Latvian","lt":"Lithuanian","lb":"Luxembourgish","mk":"Macedonian","mg":"Malagasy","ms":"Malay","ml":"Malayalam","mt":"Maltese","mi":"Maori","mr":"Marathi","mn":"Mongolian","my":"Myanmar (Burmese)","ne":"Nepalese","no":"Norwegian","ps":"Pashto","fa":"Persian","pl":"Polish","pt":"Portuguese","pa":"Punjabi","ro":"Romanian","ru":"Russian","sm":"Samoan","gd":"Scots Gaelic","sr":"Serbian","st":"Sesotho","sn":"Shona","sd":"Sindhi","si":"Sinhala","sk":"Slovak","sl":"Slovenian","so":"Somali","es":"Spanish","su":"Sundanese","sw":"Swahili","sv":"Swedish","tg":"Tajik","ta":"Tamil","te":"Telugu","th":"Thai","tr":"Turkish","uk":"Ukrainian","ur":"Urdu","uz":"Uzbek","vi":"Vietnamese","cy":"Welsh","xh":"Xhosa","yi":"Yiddish","yo":"Yoruba","zu":"Zulu"};
+    // Database 100+ Bahasa
+    const langs = {"af":"Afrikaans","sq":"Albanian","am":"Amharic","ar":"Arabic","hy":"Armenian","az":"Azerbaijani","eu":"Basque","be":"Belarusian","bn":"Bengali","bs":"Bosnian","bg":"Bulgarian","ca":"Catalan","ceb":"Cebuano","ny":"Chichewa","zh-CN":"Chinese","hr":"Croatian","cs":"Czech","da":"Danish","nl":"Dutch","en":"English","eo":"Esperanto","et":"Estonian","tl":"Filipino","fi":"Finnish","fr":"French","de":"German","el":"Greek","gu":"Gujarati","ht":"Haitian Creole","ha":"Hausa","iw":"Hebrew","hi":"Hindi","hu":"Hungarian","is":"Icelandic","ig":"Igbo","id":"Indonesian","ga":"Irish","it":"Italian","ja":"Japanese","jw":"Javanese","kn":"Kannada","kk":"Kazakh","km":"Khmer","ko":"Korean","lo":"Lao","la":"Latin","lv":"Latvian","lt":"Lithuanian","mk":"Macedonian","mg":"Malagasy","ms":"Malay","ml":"Malayalam","mt":"Maltese","mi":"Maori","mr":"Marathi","mn":"Mongolian","my":"Myanmar","ne":"Nepalese","no":"Norwegian","ps":"Pashto","fa":"Persian","pl":"Polish","pt":"Portuguese","pa":"Punjabi","ro":"Romanian","ru":"Russian","sr":"Serbian","sk":"Slovak","sl":"Slovenian","so":"Somali","es":"Spanish","su":"Sundanese","sw":"Swahili","sv":"Swedish","tg":"Tajik","ta":"Tamil","te":"Telugu","th":"Thai","tr":"Turkish","uk":"Ukrainian","ur":"Urdu","uz":"Uzbek","vi":"Vietnamese","zu":"Zulu"};
 
     const src = document.getElementById('srcLang');
     const target = document.getElementById('targetLang');
     const status = document.getElementById('status');
-    const micBtn = document.getElementById('micBtn');
 
-    // Load 100+ Bahasa
     Object.entries(langs).forEach(([code, name]) => {
         const opt = `<option value="${code}">${name.toUpperCase()}</option>`;
         src.innerHTML += opt; target.innerHTML += opt;
     });
-    target.value = "en"; // Default target English
+    target.value = "en";
 
     let timer;
     function trigger() {
         status.innerText = 'MEMPROSES...';
         clearTimeout(timer);
-        timer = setTimeout(translate, 800);
+        timer = setTimeout(translate, 600);
     }
 
     async function translate() {
@@ -154,33 +149,23 @@
             const data = await res.json();
             if(data && data[0]) {
                 out.innerText = data[0].map(x => x[0]).join("");
-                status.innerText = 'COMPLETED';
+                status.innerText = 'TRANSLATED';
             }
-        } catch (e) { status.innerText = 'SYNC ERROR'; }
+        } catch (e) { status.innerText = 'CONNECTION ERROR'; }
     }
 
-    // FITUR PREMIUM: VOICE RECOGNITION (MIC)
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SpeechRecognition) {
-        const recognition = new SpeechRecognition();
-        recognition.onstart = () => { micBtn.classList.add('active'); status.innerText = 'LISTENING...'; };
-        recognition.onend = () => { micBtn.classList.remove('active'); status.innerText = 'PROCESSING VOICE...'; };
-        recognition.onresult = (event) => {
-            document.getElementById('inputText').value = event.results[0][0].transcript;
-            translate();
-        };
-        window.toggleMic = () => recognition.start();
-    } else {
-        micBtn.style.display = 'none';
-    }
-
-    // FITUR PREMIUM: TEXT TO SPEECH (LISTEN)
-    window.speakResult = () => {
-        const text = document.getElementById('outputText').innerText;
+    // FUNGSI LISTEN (AUDIO) PERBAIKAN
+    function playAudio(text, langCode) {
+        if (!text || text === '...') return;
+        window.speechSynthesis.cancel(); // Reset suara sebelumnya biar gak tumpang tindih
         const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = target.value;
+        utterance.lang = langCode;
+        utterance.rate = 0.9; // Kecepatan sedikit diperlambat biar jelas
         window.speechSynthesis.speak(utterance);
-    };
+    }
+
+    window.speakInput = () => playAudio(document.getElementById('inputText').value, src.value === 'auto' ? 'id-ID' : src.value);
+    window.speakOutput = () => playAudio(document.getElementById('outputText').innerText, target.value);
 
     window.copyResult = () => {
         navigator.clipboard.writeText(document.getElementById('outputText').innerText);
