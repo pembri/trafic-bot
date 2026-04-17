@@ -11,13 +11,14 @@
     .drop-zone { transition: all 0.3s; }
     .drop-zone.dragover { background: #1f2937; border-color: #f59e0b; }
     .gradient-btn { background: linear-gradient(90deg, #f59e0b, #db2777); }
+    /* Efek loading tambahan */
+    .animate-pulse-slow { animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
   </style>
 </head>
 <body>
 
 <div class="max-w-5xl mx-auto bg-zinc-950 min-h-screen">
 
-  <!-- Header -->
   <div class="border-b border-zinc-800 px-6 py-4 flex items-center justify-between bg-zinc-950 sticky top-0 z-10">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-pink-500 rounded-2xl flex items-center justify-center">
@@ -33,19 +34,17 @@
 
   <div class="p-6">
 
-    <!-- API Token -->
     <div class="mb-6">
       <label class="block text-sm font-medium mb-2">API Token <span class="text-red-500">*</span></label>
       <div class="flex gap-3">
-        <input id="apiToken" type="text" class="flex-1 bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-3 text-sm" placeholder="apk_xxxxxxxxxxxxxxxx">
+        <input id="apiToken" type="password" class="flex-1 bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-3 text-sm" placeholder="apk_xxxxxxxxxxxxxxxx">
         <button onclick="checkApiToken()" class="bg-zinc-800 hover:bg-zinc-700 px-8 rounded-2xl text-sm font-medium">Check</button>
       </div>
-      <p id="tokenStatus" class="text-xs mt-2"></p>
+      <p id="tokenStatus" class="text-xs mt-2 font-bold uppercase"></p>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
 
-      <!-- INPUT -->
       <div>
         <h2 class="text-2xl font-semibold mb-6">Input</h2>
 
@@ -54,40 +53,36 @@
           <select id="modelVersion" class="w-full bg-zinc-900 border border-zinc-700 rounded-2xl px-4 py-3">
             <option value="V5">V5 (Latest & Default)</option>
             <option value="V4_5PLUS">V4.5 Plus</option>
-            <option value="V4_5ALL">V4.5 All</option>
-            <option value="V4_5">V4.5</option>
             <option value="V4">V4</option>
           </select>
         </div>
 
-        <!-- Source Audio -->
         <div class="mb-8">
           <label class="block text-sm mb-2">Source Audio <span class="text-red-500">*</span></label>
           <div id="dropZone" class="drop-zone border-2 border-dashed border-zinc-700 rounded-3xl p-10 text-center cursor-pointer">
             <i class="fa-solid fa-cloud-arrow-up text-5xl text-zinc-400 mb-4"></i>
-            <p class="font-medium">Klik atau drag & drop file audio</p>
-            <p class="text-xs text-zinc-400">MP3, WAV, OGG, M4A, FLAC (max 50MB)</p>
+            <p class="font-medium" id="dropLabel">Klik atau drag & drop file audio</p>
+            <p class="text-xs text-zinc-400">MP3, WAV, Max 50MB</p>
             <input type="file" id="audioFile" accept="audio/*" class="hidden">
           </div>
 
           <div id="uploadProgress" class="hidden mt-4">
             <div class="flex justify-between text-xs mb-1">
-              <span>Uploading...</span>
+              <span class="text-orange-400 font-bold uppercase">Uploading...</span>
               <span id="progressPercent">0%</span>
             </div>
-            <div class="h-2 bg-zinc-800 rounded-full">
+            <div class="h-2 bg-zinc-800 rounded-full overflow-hidden">
               <div id="progressBar" class="h-2 bg-orange-500 w-0 transition-all"></div>
             </div>
           </div>
 
-          <div id="fileInfo" class="hidden mt-3 text-emerald-400 text-sm"></div>
+          <div id="fileInfo" class="hidden mt-3 text-emerald-400 text-sm font-bold"></div>
 
-          <div class="my-6 text-center text-xs text-zinc-500">— atau masukkan URL langsung —</div>
+          <div class="my-6 text-center text-xs text-zinc-500 uppercase tracking-widest">— atau masukkan URL langsung —</div>
           <input id="directUrl" type="text" placeholder="https://example.com/lagu.mp3" 
                  class="w-full bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-3 text-sm">
         </div>
 
-        <!-- Toggles -->
         <div class="grid grid-cols-2 gap-6 mb-6">
           <div class="flex items-center justify-between">
             <div><div class="font-medium">Custom Mode</div><div class="text-xs text-zinc-400">Style & title manual</div></div>
@@ -107,25 +102,24 @@
           </div>
         </div>
 
-        <!-- Cover Prompt -->
         <div class="mb-6">
           <label class="block text-sm font-medium mb-2">Cover Prompt</label>
           <textarea id="coverPrompt" rows="3" class="w-full bg-zinc-900 border border-zinc-700 rounded-2xl px-4 py-3 text-sm" placeholder="Transform into smooth jazz with piano and saxophone..."></textarea>
         </div>
 
-        <!-- Custom Fields -->
         <div id="customFields" class="hidden space-y-5 mb-6">
-          <div>
-            <label class="block text-sm font-medium mb-1">Target Style</label>
-            <input id="targetStyle" type="text" class="w-full bg-zinc-900 border border-zinc-700 rounded-2xl px-4 py-3" value="Jazz">
-          </div>
-          <div>
-            <label class="block text-sm font-medium mb-1">Cover Title</label>
-            <input id="coverTitle" type="text" class="w-full bg-zinc-900 border border-zinc-700 rounded-2xl px-4 py-3" value="My Song (Jazz Cover)">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium mb-1">Target Style</label>
+              <input id="targetStyle" type="text" class="w-full bg-zinc-900 border border-zinc-700 rounded-2xl px-4 py-3" placeholder="Jazz">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">Cover Title</label>
+              <input id="coverTitle" type="text" class="w-full bg-zinc-900 border border-zinc-700 rounded-2xl px-4 py-3" placeholder="Jazz Cover">
+            </div>
           </div>
         </div>
 
-        <!-- Start At & Vocal Gender -->
         <div class="grid grid-cols-2 gap-5 mb-6">
           <div>
             <label class="block text-sm font-medium mb-1">Start At (detik)</label>
@@ -140,47 +134,52 @@
           </div>
         </div>
 
-        <!-- Sliders -->
-        <div class="space-y-6">
+        <div class="space-y-6 bg-zinc-900/40 p-6 rounded-3xl border border-zinc-800">
           <div>
-            <div class="flex justify-between text-sm mb-1"><span>Weirdness</span><span id="weirdVal">0.3</span></div>
+            <div class="flex justify-between text-xs mb-2 text-zinc-400 font-bold uppercase tracking-wider"><span>Weirdness</span><span id="weirdVal" class="text-orange-500">0.3</span></div>
             <input type="range" id="weirdness" min="0" max="1" step="0.01" value="0.3" class="w-full accent-orange-500" oninput="document.getElementById('weirdVal').textContent=this.value">
           </div>
           <div>
-            <div class="flex justify-between text-sm mb-1"><span>Source Audio Weight</span><span id="audioVal">0.5</span></div>
+            <div class="flex justify-between text-xs mb-2 text-zinc-400 font-bold uppercase tracking-wider"><span>Source Audio Weight</span><span id="audioVal" class="text-orange-500">0.5</span></div>
             <input type="range" id="audioWeight" min="0" max="1" step="0.01" value="0.5" class="w-full accent-orange-500" oninput="document.getElementById('audioVal').textContent=this.value">
           </div>
           <div>
-            <div class="flex justify-between text-sm mb-1"><span>Style Weight</span><span id="styleVal">0.62</span></div>
+            <div class="flex justify-between text-xs mb-2 text-zinc-400 font-bold uppercase tracking-wider"><span>Style Weight</span><span id="styleVal" class="text-orange-500">0.62</span></div>
             <input type="range" id="styleWeight" min="0" max="1" step="0.01" value="0.62" class="w-full accent-orange-500" oninput="document.getElementById('styleVal').textContent=this.value">
           </div>
         </div>
 
-        <button onclick="runCoverGeneration()" class="w-full gradient-btn text-black font-bold py-4 rounded-3xl text-lg flex items-center justify-center gap-3 mt-10">
+        <button id="runBtn" onclick="runCoverGeneration()" class="w-full gradient-btn text-black font-black py-4 rounded-3xl text-lg flex items-center justify-center gap-3 mt-10 active:scale-95 transition-all">
           <i class="fa-solid fa-play"></i>
           Run Cover (2.5 credit)
         </button>
       </div>
 
-      <!-- OUTPUT -->
       <div>
         <h2 class="text-2xl font-semibold mb-4">Output</h2>
-        <div id="outputArea" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 min-h-[420px]">
+        <div id="outputArea" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 min-h-[420px] flex flex-col justify-center">
 
-          <div id="status" class="hidden mb-4 p-4 bg-zinc-800 border border-orange-400/30 rounded-2xl">
-            <div class="flex items-center gap-3">
-              <i id="statusIcon" class="fa-solid fa-spinner fa-spin text-orange-400"></i>
+          <div id="status" class="hidden mb-4 p-6 bg-zinc-950 border border-orange-400/20 rounded-3xl animate-pulse-slow">
+            <div class="flex flex-col items-center gap-4 text-center">
+              <i id="statusIcon" class="fa-solid fa-spinner fa-spin text-4xl text-orange-400"></i>
               <div class="flex-1">
-                <div id="statusText" class="font-medium">Mengirim task...</div>
-                <div id="taskIdDisplay" class="text-xs text-zinc-400"></div>
+                <div id="statusText" class="font-bold text-lg text-orange-400 uppercase tracking-widest">Memulai Proses...</div>
+                <div id="taskIdDisplay" class="text-[10px] mt-2 font-mono text-zinc-500"></div>
               </div>
+            </div>
+            <div class="mt-6 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+               <div id="genProgressBar" class="h-full bg-gradient-to-r from-orange-500 to-pink-500 w-0 transition-all duration-1000"></div>
             </div>
           </div>
 
-          <div id="resultPlayer" class="hidden">
-            <audio id="audioResult" controls class="w-full"></audio>
-            <div class="mt-4 text-center">
-              <a id="downloadLink" href="#" target="_blank" class="text-orange-400 flex items-center justify-center gap-2">
+          <div id="resultPlayer" class="hidden w-full">
+            <div class="bg-zinc-950 p-6 rounded-3xl border border-zinc-800 text-center">
+              <div class="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fa-solid fa-check text-black text-2xl"></i>
+              </div>
+              <h3 class="font-bold text-xl mb-4 italic">Selesai! Silakan dengar:</h3>
+              <audio id="audioResult" controls class="w-full mb-6"></audio>
+              <a id="downloadLink" href="#" target="_blank" class="block py-4 bg-white text-black rounded-2xl font-black text-xs uppercase hover:bg-zinc-200 transition-all">
                 <i class="fa-solid fa-download"></i> Download Cover
               </a>
             </div>
@@ -188,7 +187,7 @@
 
           <div id="placeholder" class="text-center py-20 text-zinc-400">
             <i class="fa-solid fa-waveform-lines text-6xl mb-6 opacity-30"></i>
-            <p>Hasil cover akan muncul di sini</p>
+            <p class="font-medium tracking-wide">Hasil cover akan muncul di sini</p>
           </div>
         </div>
       </div>
@@ -199,8 +198,10 @@
 <script>
 // Variabel global
 let audioUrl = "";
+let vocalGender = 'm';
+let pollInterval = null;
 
-// === UPLOAD FILE + PROGRESS ===
+// === UPLOAD FILE + PROGRESS (FIXED) ===
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('audioFile');
 
@@ -244,20 +245,13 @@ async function handleFile(file) {
       if (url.startsWith('http')) {
         audioUrl = url;
         document.getElementById('fileInfo').classList.remove('hidden');
-        document.getElementById('fileInfo').innerHTML = `✅ \( {file.name} <span class="text-xs">( \){ (file.size/1024/1024).toFixed(1)} MB)</span>`;
-        console.log("✅ Audio URL tersimpan:", audioUrl); // debug
+        document.getElementById('fileInfo').innerHTML = `✅ ${file.name} (${(file.size/1024/1024).toFixed(1)} MB)`;
+        console.log("Audio URL:", audioUrl);
       } else {
         alert("Upload gagal: " + xhr.responseText);
       }
     }
   };
-
-  xhr.onerror = () => {
-    progressDiv.classList.add('hidden');
-    dropZone.style.opacity = "1";
-    alert("Upload gagal (koneksi error). Coba pakai Direct URL.");
-  };
-
   xhr.send(formData);
 }
 
@@ -268,30 +262,23 @@ document.getElementById('directUrl').addEventListener('input', (e) => {
   }
 });
 
-// Toggle Custom Mode
 function toggleCustom() {
   const isCustom = document.getElementById('customMode').checked;
   document.getElementById('customFields').classList.toggle('hidden', !isCustom);
 }
 
-// Vocal Gender
-let vocalGender = 'm';
 function selectGender(btn, gender) {
   vocalGender = gender;
-  document.getElementById('maleBtn').classList.toggle('border-orange-500', gender === 'm');
-  document.getElementById('maleBtn').classList.toggle('bg-orange-500/10', gender === 'm');
-  document.getElementById('femaleBtn').classList.toggle('border-orange-500', gender === 'f');
-  document.getElementById('femaleBtn').classList.toggle('bg-orange-500/10', gender === 'f');
+  document.getElementById('maleBtn').className = "flex-1 py-3 border border-zinc-700 rounded-2xl font-medium";
+  document.getElementById('femaleBtn').className = "flex-1 py-3 border border-zinc-700 rounded-2xl font-medium";
+  btn.className = "flex-1 py-3 border-2 border-orange-500 bg-orange-500/10 text-orange-400 rounded-2xl font-medium";
 }
 
-// Check Token
 async function checkApiToken() {
   const token = document.getElementById('apiToken').value.trim();
   const statusEl = document.getElementById('tokenStatus');
-  if (!token) return statusEl.innerHTML = `<span class="text-red-500">Token kosong</span>`;
-
+  if (!token) return;
   statusEl.innerHTML = `<span class="text-orange-400">Memeriksa...</span>`;
-
   try {
     const res = await fetch('https://api.apipass.dev/api/v1/jobs/createTask', {
       method: 'POST',
@@ -300,20 +287,24 @@ async function checkApiToken() {
     });
     const data = await res.json();
     if (data.code === 200 || data.code === 402) {
-      statusEl.innerHTML = `<span class="text-green-400">✅ Token valid</span>`;
+      statusEl.innerHTML = `<span class="text-emerald-400 italic">✅ Token Terkoneksi</span>`;
     } else {
-      statusEl.innerHTML = `<span class="text-red-500">❌ Token tidak valid</span>`;
+      statusEl.innerHTML = `<span class="text-red-500">❌ Token Invalid</span>`;
     }
-  } catch (err) {
-    statusEl.innerHTML = `<span class="text-red-500">❌ Gagal terhubung</span>`;
-  }
+  } catch (err) { statusEl.innerHTML = `<span class="text-red-500">❌ Error Koneksi</span>`; }
 }
 
-// Run Cover Generation
+// === RUN & REALTIME POLLING ===
 async function runCoverGeneration() {
   const token = document.getElementById('apiToken').value.trim();
-  if (!token) return alert("Masukkan API Token terlebih dahulu!");
-  if (!audioUrl) return alert("Upload file atau masukkan Direct URL terlebih dahulu!\n\nAudio URL saat ini: " + (audioUrl || "kosong"));
+  if (!token) return alert("Masukkan API Token!");
+  if (!audioUrl) return alert("Pilih file lagu dulu!");
+
+  document.getElementById('runBtn').disabled = true;
+  document.getElementById('placeholder').classList.add('hidden');
+  document.getElementById('status').classList.remove('hidden');
+  document.getElementById('resultPlayer').classList.add('hidden');
+  document.getElementById('statusText').textContent = "Mendaftarkan Antrean...";
 
   const payload = {
     model: "suno/cover",
@@ -332,31 +323,81 @@ async function runCoverGeneration() {
     }
   };
 
-  document.getElementById('status').classList.remove('hidden');
-  document.getElementById('statusText').textContent = "Mengirim task ke ApiPass...";
-
   try {
     const res = await fetch('https://api.apipass.dev/api/v1/jobs/createTask', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify(payload)
     });
-
     const result = await res.json();
 
     if (result.code === 200 && result.data?.taskId) {
-      document.getElementById('taskIdDisplay').textContent = `Task ID: ${result.data.taskId}`;
-      document.getElementById('statusText').innerHTML = `✅ Task berhasil dibuat!<br>Proses Suno sedang berjalan...`;
-      alert(`Task berhasil dibuat!\n\nTask ID: ${result.data.taskId}\n\nAudio URL: ${audioUrl}`);
+      const taskId = result.data.taskId;
+      document.getElementById('taskIdDisplay').textContent = `TASK ID: ${taskId}`;
+      startPolling(taskId, token);
     } else {
-      alert("Error dari ApiPass:\n" + (result.message || JSON.stringify(result)));
+      alert("Gagal: " + (result.message || "Unknown error"));
+      resetUI();
     }
   } catch (err) {
-    alert("Gagal mengirim request: " + err.message);
+    alert("Koneksi Error: " + err.message);
+    resetUI();
   }
 }
 
-// Inisialisasi
+function startPolling(taskId, token) {
+  let genProgress = 10;
+  
+  pollInterval = setInterval(async () => {
+    try {
+      const res = await fetch('https://api.apipass.dev/api/v1/jobs/getTask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ taskId })
+      });
+      const data = await res.json();
+      
+      if (data.code === 200) {
+        const status = data.data.status;
+        
+        if (status === "success") {
+          clearInterval(pollInterval);
+          updateGenBar(100);
+          showResult(data.data.response);
+        } else if (status === "generating" || status === "processing") {
+          genProgress = genProgress < 95 ? genProgress + 5 : 98;
+          updateGenBar(genProgress);
+          document.getElementById('statusText').textContent = "AI Sedang Memproses Lagu...";
+        } else if (status === "failed") {
+          clearInterval(pollInterval);
+          alert("Yah, AI gagal memproses lagu ini.");
+          resetUI();
+        }
+      }
+    } catch (e) { console.log("Polling..."); }
+  }, 4000);
+}
+
+function updateGenBar(p) {
+  document.getElementById('genProgressBar').style.width = p + '%';
+}
+
+function showResult(response) {
+  const url = Array.isArray(response) ? response[0].audioUrl : response.audioUrl;
+  document.getElementById('status').classList.add('hidden');
+  document.getElementById('resultPlayer').classList.remove('hidden');
+  document.getElementById('audioResult').src = url;
+  document.getElementById('downloadLink').href = url;
+  document.getElementById('runBtn').disabled = false;
+}
+
+function resetUI() {
+  document.getElementById('status').classList.add('hidden');
+  document.getElementById('placeholder').classList.remove('hidden');
+  document.getElementById('runBtn').disabled = false;
+}
+
+// Init
 document.getElementById('maleBtn').classList.add('border-orange-500', 'bg-orange-500/10');
 </script>
 </body>
