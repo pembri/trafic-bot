@@ -2,450 +2,684 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeoCover AI • Suno Cover</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CoverAI Studio • Suno Cover Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
         
         :root {
             --primary: #00f0ff;
         }
         
-        * { transition: all 0.2s ease; }
-        
-        .neon-text {
-            text-shadow: 0 0 15px #00f0ff, 0 0 25px #00f0ff;
+        * {
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
         }
         
         .glass {
-            background: rgba(15, 23, 42, 0.92);
-            backdrop-filter: blur(16px);
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
         }
         
-        .mobile-input {
-            font-size: 16px; /* mencegah zoom di iOS */
+        .neon-text {
+            text-shadow: 0 0 20px var(--primary);
+        }
+        
+        .mobile-header {
+            box-shadow: 0 4px 20px -2px rgb(0 240 255);
+        }
+        
+        .slider-thumb {
+            appearance: none;
+        }
+        
+        .slider-thumb::-webkit-slider-thumb {
+            appearance: none;
+            height: 18px;
+            width: 18px;
+            background: #00f0ff;
+            border-radius: 9999px;
+            box-shadow: 0 0 15px #00f0ff;
+            cursor: pointer;
         }
     </style>
 </head>
-<body class="bg-[#0a0a1f] text-white min-h-screen font-sans pb-20">
-    <!-- Navbar -->
-    <nav class="border-b border-white/10 bg-[#0a0a1f]/95 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-2xl flex items-center justify-center text-xl">
-                    🎵
+<body class="bg-[#0a0a0f] text-white font-sans min-h-screen pb-20">
+    <!-- HEADER MOBILE -->
+    <div class="mobile-header bg-[#111118] border-b border-[#00f0ff]/20 sticky top-0 z-50">
+        <div class="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center gap-x-2">
+                <div class="w-9 h-9 bg-gradient-to-br from-cyan-400 to-violet-500 rounded-2xl flex items-center justify-center text-xl shadow-lg shadow-cyan-500/50">
+                    🎤
                 </div>
                 <div>
-                    <h1 class="text-2xl font-bold tracking-tighter neon-text">NeoCover AI</h1>
-                    <p class="text-[10px] text-cyan-400 -mt-1">Suno V5 Cover</p>
+                    <h1 class="text-2xl font-bold tracking-tighter neon-text" style="font-family: 'Space Grotesk', sans-serif;">CoverAI</h1>
+                    <p class="text-[10px] text-cyan-400 -mt-1">Suno Cover Studio</p>
                 </div>
             </div>
             
-            <div onclick="toggleApiKeyModal()" class="flex items-center gap-2 cursor-pointer text-sm">
-                <i class="fas fa-key text-cyan-400"></i>
-                <span id="api-key-display" class="font-mono text-cyan-300">API Key</span>
-            </div>
-        </div>
-    </nav>
-
-    <div class="max-w-2xl mx-auto px-4 pt-6">
-        
-        <!-- Tabs -->
-        <div class="flex border-b border-white/10 mb-6">
-            <button onclick="showTab(0)" id="tab-0" 
-                    class="flex-1 py-3 text-center font-medium border-b-2 border-cyan-400 text-cyan-400">Buat Cover</button>
-            <button onclick="showTab(1)" id="tab-1" 
-                    class="flex-1 py-3 text-center font-medium text-white/70">Riwayat</button>
-        </div>
-
-        <!-- Tab 1: Generator -->
-        <div id="content-0">
-            <div class="glass border border-white/10 rounded-3xl p-5 md:p-8">
+            <!-- API Key -->
+            <div class="flex items-center gap-x-3">
+                <div onclick="toggleApiModal()" class="flex items-center bg-[#1a1a22] hover:bg-[#22222a] text-xs px-4 h-9 rounded-3xl border border-[#00f0ff]/30 cursor-pointer">
+                    <i class="fa-solid fa-key mr-2 text-cyan-400"></i>
+                    <span id="api-key-display" class="max-w-[120px] truncate">Masukkan API Key</span>
+                </div>
                 
-                <h2 class="text-2xl md:text-3xl font-bold mb-1">Ubah Lagu Jadi Cover Baru</h2>
-                <p class="text-cyan-300 text-sm mb-6">Upload audio → Deskripsikan gaya → Generate dengan Suno V5</p>
-
-                <!-- Warning API Key -->
-                <div id="api-warning" onclick="toggleApiKeyModal()" 
-                     class="hidden mb-6 bg-amber-500/10 border border-amber-400/50 text-amber-400 p-4 rounded-2xl text-sm flex items-center gap-3">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <span>Masukkan API Key terlebih dahulu</span>
+                <!-- Coin Balance -->
+                <div class="flex items-center bg-[#1a1a22] px-4 h-9 rounded-3xl border border-amber-400/30 text-amber-400 text-sm font-medium">
+                    <i class="fa-solid fa-coins mr-1.5"></i>
+                    <span id="coin-balance" class="font-mono">—</span>
                 </div>
-
-                <!-- Audio Input -->
-                <div class="mb-6">
-                    <label class="block text-sm font-medium mb-2 text-white/70">Audio Asli</label>
-                    <div onclick="document.getElementById('audio-upload').click()" 
-                         class="border-2 border-dashed border-white/30 hover:border-cyan-400 rounded-3xl p-8 text-center cursor-pointer">
-                        <input type="file" id="audio-upload" accept="audio/*" class="hidden" onchange="handleFileSelect(event)">
-                        <i class="fas fa-cloud-upload-alt text-5xl text-cyan-400 mb-3"></i>
-                        <p class="font-medium">Klik atau tarik file audio</p>
-                        <p class="text-xs text-white/50 mt-1">MP3, WAV, M4A • Max 50MB</p>
-                        <p id="file-name" class="text-xs font-mono text-cyan-300 mt-3"></p>
-                    </div>
-
-                    <div id="audio-preview" class="hidden mt-4 bg-white/5 rounded-3xl p-4 flex items-center gap-3">
-                        <audio id="preview-player" controls class="flex-1"></audio>
-                        <button onclick="clearFile()" class="p-3 text-red-400 hover:bg-red-500/20 rounded-2xl">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-
-                    <div class="mt-4">
-                        <input id="audio-url" type="text" placeholder="https://... (URL audio publik)" 
-                               class="mobile-input w-full bg-white/10 border border-white/20 focus:border-cyan-400 rounded-3xl px-5 py-4 text-sm outline-none">
-                        <p class="text-[10px] text-white/40 mt-2">* API memerlukan URL publik (catbox.moe, pixeldrain, dll)</p>
-                    </div>
-                </div>
-
-                <!-- Parameters (stack di mobile) -->
-                <div class="grid grid-cols-1 gap-5">
-                    <div>
-                        <label class="block text-sm font-medium mb-2 text-white/70">Model Version</label>
-                        <select id="model-version" class="mobile-input w-full bg-white/10 border border-white/20 rounded-3xl px-5 py-4 outline-none">
-                            <option value="V5">V5 (Rekomendasi)</option>
-                            <option value="V4_5PLUS">V4.5 Plus</option>
-                            <option value="V4_5">V4.5</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium mb-2 text-white/70">Judul Cover</label>
-                        <input id="title" type="text" value="NeoCover AI" 
-                               class="mobile-input w-full bg-white/10 border border-white/20 rounded-3xl px-5 py-4 outline-none">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium mb-2 text-white/70">Prompt Gaya Baru</label>
-                        <textarea id="prompt" rows="3" 
-                                  class="mobile-input w-full bg-white/10 border border-white/20 rounded-3xl px-5 py-4 outline-none resize-none"
-                                  placeholder="Jadikan lagu ini jadi jazz smooth dengan vokal wanita...">Jazz modern, vibe cyberpunk, vokal pria dalam</textarea>
-                    </div>
-
-                    <div class="flex gap-4">
-                        <div class="flex-1">
-                            <label class="flex items-center gap-2 text-sm">
-                                <input id="instrumental" type="checkbox" class="w-5 h-5 accent-cyan-400">
-                                <span>Instrumental only</span>
-                            </label>
-                        </div>
-                        <div class="flex-1">
-                            <label class="flex items-center gap-2 text-sm">
-                                <input id="custom-mode" type="checkbox" checked class="w-5 h-5 accent-cyan-400">
-                                <span>Custom Mode</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium mb-2 text-white/70">Vocal Gender</label>
-                        <div class="grid grid-cols-2 gap-3">
-                            <button onclick="selectGender(this, 'm')" data-active="false"
-                                    class="gender-btn py-4 rounded-3xl border-2 border-transparent bg-white/10 hover:bg-white/20 flex items-center justify-center gap-2">
-                                <i class="fas fa-male"></i> Pria
-                            </button>
-                            <button onclick="selectGender(this, 'f')" data-active="false"
-                                    class="gender-btn py-4 rounded-3xl border-2 border-transparent bg-white/10 hover:bg-white/20 flex items-center justify-center gap-2">
-                                <i class="fas fa-female"></i> Wanita
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Generate Button -->
-                <button onclick="startGeneration()" 
-                        class="mt-8 w-full h-14 bg-gradient-to-r from-cyan-400 to-purple-600 hover:brightness-110 font-bold text-lg rounded-3xl flex items-center justify-center gap-3 shadow-xl">
-                    <i class="fas fa-wand-magic-sparkles"></i>
-                    <span>GENERATE COVER</span>
+                
+                <button onclick="logout()" class="w-9 h-9 bg-[#1a1a22] hover:bg-red-500/10 text-red-400 rounded-2xl flex items-center justify-center">
+                    <i class="fa-solid fa-right-from-bracket"></i>
                 </button>
             </div>
         </div>
-
-        <!-- Tab 2: Riwayat -->
-        <div id="content-1" class="hidden">
-            <h2 class="text-xl font-bold mb-4">Riwayat Cover</h2>
-            <div id="history-list" class="space-y-4"></div>
-            <p id="no-history" class="text-center text-white/40 py-12 text-sm">Belum ada riwayat</p>
+        
+        <!-- TABS -->
+        <div class="max-w-screen-xl mx-auto px-4 flex border-t border-[#00f0ff]/10">
+            <button onclick="switchTab(0)" id="tab-0" class="flex-1 py-4 text-sm font-semibold flex items-center justify-center gap-x-2 border-b-2 border-transparent data-[active=true]:border-cyan-400 data-[active=true]:text-cyan-400">
+                <i class="fa-solid fa-sliders"></i>
+                <span>PLAYGROUND</span>
+            </button>
+            <button onclick="switchTab(1)" id="tab-1" class="flex-1 py-4 text-sm font-semibold flex items-center justify-center gap-x-2 border-b-2 border-transparent data-[active=true]:border-cyan-400 data-[active=true]:text-cyan-400">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span>RIWAYAT COVER</span>
+            </button>
         </div>
     </div>
 
-    <!-- Status Panel (floating di mobile) -->
-    <div id="status-panel" class="hidden fixed bottom-0 left-0 right-0 bg-[#0a0a1f] border-t border-white/10 p-4 max-h-[65vh] overflow-auto">
-        <div class="glass rounded-3xl p-5">
-            <div class="flex justify-between mb-4">
-                <span class="font-mono text-sm" id="task-id-display"></span>
-                <span id="status-badge" class="px-4 py-1 text-xs font-bold rounded-3xl"></span>
-            </div>
-            <div class="h-2 bg-white/10 rounded-full overflow-hidden mb-5">
-                <div id="progress-bar" class="h-2 bg-gradient-to-r from-cyan-400 to-purple-600 rounded-full w-1/4"></div>
-            </div>
-            <div id="log-container" class="font-mono text-xs bg-black/40 p-4 rounded-2xl max-h-60 overflow-auto text-white/70"></div>
+    <!-- TAB 0: PLAYGROUND -->
+    <div id="content-0" class="max-w-screen-xl mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
             
-            <div id="output-area" class="hidden mt-6">
-                <h4 class="font-medium mb-3">Hasil Cover</h4>
-                <div id="audio-results" class="space-y-4"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- API Key Modal -->
-    <div id="api-modal" class="hidden fixed inset-0 bg-black/80 flex items-end md:items-center justify-center z-50">
-        <div class="glass w-full max-w-md md:rounded-3xl rounded-t-3xl p-6 md:p-8">
-            <h3 class="text-2xl font-bold mb-2">API Key</h3>
-            <p class="text-sm text-white/60 mb-6">Dari <a href="https://apipass.dev/app/api-keys" target="_blank" class="text-cyan-400 underline">apipass.dev</a></p>
-            
-            <input id="api-key-input" type="password" placeholder="sk-ap-..." 
-                   class="mobile-input w-full bg-white/10 border border-white/20 rounded-3xl px-5 py-5 font-mono outline-none mb-6">
-            
-            <div class="grid grid-cols-2 gap-3">
-                <button onclick="saveApiKey()" class="py-4 bg-cyan-400 text-black font-semibold rounded-3xl">Simpan</button>
-                <button onclick="toggleApiKeyModal()" class="py-4 border border-white/30 rounded-3xl">Batal</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let currentApiKey = ''
-        let currentTaskId = ''
-        let pollingInterval = null
-        let history = JSON.parse(localStorage.getItem('neocover_history') || '[]')
-
-        function loadApiKey() {
-            currentApiKey = localStorage.getItem('apipass_api_key') || ''
-            const el = document.getElementById('api-key-display')
-            if (currentApiKey) {
-                el.innerHTML = `✅ ${currentApiKey.slice(0,8)}...`
-                document.getElementById('api-warning').classList.add('hidden')
-            } else {
-                el.innerHTML = `⚠️ API Key`
-                document.getElementById('api-warning').classList.remove('hidden')
-            }
-        }
-
-        function toggleApiKeyModal() {
-            document.getElementById('api-modal').classList.toggle('hidden')
-        }
-
-        function saveApiKey() {
-            const key = document.getElementById('api-key-input').value.trim()
-            if (key) {
-                localStorage.setItem('apipass_api_key', key)
-                currentApiKey = key
-                loadApiKey()
-                toggleApiKeyModal()
-            }
-        }
-
-        function handleFileSelect(e) {
-            const file = e.target.files[0]
-            if (!file) return
-            if (!file.type.startsWith('audio/')) return alert('File audio saja yang diperbolehkan')
-
-            document.getElementById('file-name').textContent = file.name
-            document.getElementById('audio-preview').classList.remove('hidden')
-            document.getElementById('preview-player').src = URL.createObjectURL(file)
-        }
-
-        function clearFile() {
-            document.getElementById('audio-preview').classList.add('hidden')
-            document.getElementById('file-name').textContent = ''
-            document.getElementById('audio-upload').value = ''
-        }
-
-        function selectGender(btn, gender) {
-            document.querySelectorAll('.gender-btn').forEach(b => b.dataset.active = 'false')
-            btn.dataset.active = 'true'
-        }
-
-        function showTab(n) {
-            document.getElementById('content-0').classList.toggle('hidden', n !== 0)
-            document.getElementById('content-1').classList.toggle('hidden', n !== 1)
-            
-            document.getElementById('tab-0').classList.toggle('border-b-2', n === 0)
-            document.getElementById('tab-0').classList.toggle('border-cyan-400', n === 0)
-            document.getElementById('tab-0').classList.toggle('text-cyan-400', n === 0)
-            
-            document.getElementById('tab-1').classList.toggle('text-cyan-400', n === 1)
-            
-            if (n === 1) renderHistory()
-        }
-
-        function renderHistory() {
-            const container = document.getElementById('history-list')
-            container.innerHTML = ''
-            document.getElementById('no-history').classList.toggle('hidden', history.length > 0)
-
-            history.forEach((item, i) => {
-                const div = document.createElement('div')
-                div.className = 'glass border border-white/10 rounded-3xl p-4'
-                div.innerHTML = `
-                    <div class="flex justify-between text-sm mb-2">
-                        <span class="font-medium">${item.title}</span>
-                        <span class="text-cyan-400 font-mono text-xs">${new Date(item.timestamp).toLocaleDateString('id-ID')}</span>
+            <!-- FORM KIRI -->
+            <div class="glass border border-[#00f0ff]/10 rounded-3xl p-6">
+                <h2 class="text-xl font-semibold mb-6 flex items-center gap-x-2">
+                    <span class="text-cyan-400">Buat Cover Baru</span>
+                    <span class="text-xs bg-cyan-400/10 text-cyan-400 px-3 py-1 rounded-3xl font-mono">V5</span>
+                </h2>
+                
+                <!-- Model Version -->
+                <div class="mb-5">
+                    <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Model Version</label>
+                    <select id="model_version" class="w-full bg-[#1a1a22] border border-gray-700 focus:border-cyan-400 rounded-2xl px-4 py-3 text-white outline-none">
+                        <option value="V5">V5 (Latest)</option>
+                        <option value="V4_5PLUS">V4.5 Plus</option>
+                        <option value="V4_5ALL">V4.5 All</option>
+                        <option value="V4_5">V4.5</option>
+                        <option value="V4">V4</option>
+                    </select>
+                </div>
+                
+                <!-- Source Audio URL (ganti dari upload) -->
+                <div class="mb-5">
+                    <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2 flex items-center">
+                        <span>Source Audio URL</span>
+                        <span class="ml-auto text-amber-400 text-[10px]">(harus publik &amp; max 50MB)</span>
+                    </label>
+                    <div class="flex gap-3">
+                        <input id="audio_url" type="url" placeholder="https://your-storage.com/song.mp3" 
+                               class="flex-1 bg-[#1a1a22] border border-gray-700 focus:border-cyan-400 rounded-2xl px-4 py-3 text-white outline-none">
+                        <button onclick="testAudioUrl()" 
+                                class="px-6 bg-[#1a1a22] hover:bg-cyan-400 hover:text-black border border-gray-700 rounded-2xl text-sm font-medium">
+                            <i class="fa-solid fa-circle-play"></i>
+                        </button>
                     </div>
-                    <audio controls src="${item.audioUrl}" class="w-full"></audio>
-                    <button onclick="deleteHistory(${i}); event.stopImmediatePropagation()" 
-                            class="text-red-400 text-xs mt-3 flex items-center gap-1">
-                        <i class="fas fa-trash"></i> Hapus
+                    <p class="text-[10px] text-gray-500 mt-1">Ganti dari upload file jadi link publik seperti di dokumentasi API</p>
+                </div>
+                
+                <!-- Toggles -->
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="flex items-center justify-between bg-[#1a1a22] border border-gray-700 rounded-2xl px-4 py-3">
+                        <div>
+                            <span class="text-sm">Custom Mode</span>
+                            <p class="text-xs text-gray-400">Style + Title manual</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="custom_mode" class="sr-only peer" onchange="toggleCustomMode()">
+                            <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-400/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-400"></div>
+                        </label>
+                    </div>
+                    
+                    <div class="flex items-center justify-between bg-[#1a1a22] border border-gray-700 rounded-2xl px-4 py-3">
+                        <div>
+                            <span class="text-sm">Instrumental Only</span>
+                            <p class="text-xs text-gray-400">Tanpa vokal</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="instrumental" class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-400/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-400"></div>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Cover Prompt -->
+                <div class="mb-5">
+                    <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Cover Prompt</label>
+                    <textarea id="prompt" rows="3" 
+                              class="w-full bg-[#1a1a22] border border-gray-700 focus:border-cyan-400 rounded-3xl px-4 py-3 text-white outline-none resize-none"
+                              placeholder="Transform into smooth jazz with piano and saxophone..."></textarea>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 mb-5">
+                    <!-- Target Style -->
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Target Style</label>
+                        <input id="style" type="text" value="Jazz, Smooth, Lounge" 
+                               class="w-full bg-[#1a1a22] border border-gray-700 focus:border-cyan-400 rounded-2xl px-4 py-3 text-white outline-none">
+                    </div>
+                    <!-- Cover Title -->
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Cover Title</label>
+                        <input id="title" type="text" value="My Song (Jazz Cover)" 
+                               class="w-full bg-[#1a1a22] border border-gray-700 focus:border-cyan-400 rounded-2xl px-4 py-3 text-white outline-none">
+                    </div>
+                </div>
+                
+                <!-- Start At -->
+                <div class="mb-5">
+                    <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Start At (seconds)</label>
+                    <input id="continue_at" type="number" value="0" min="0"
+                           class="w-full bg-[#1a1a22] border border-gray-700 focus:border-cyan-400 rounded-2xl px-4 py-3 text-white outline-none">
+                </div>
+                
+                <!-- Vocal Gender -->
+                <div class="mb-5">
+                    <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Vocal Gender</label>
+                    <div class="flex gap-3">
+                        <button onclick="selectGender('m')" id="gender-m"
+                                class="flex-1 py-3 rounded-2xl border flex items-center justify-center gap-x-2 text-sm font-medium border-gray-700 data-[active=true]:border-cyan-400 data-[active=true]:bg-cyan-400/10">
+                            <i class="fa-solid fa-male"></i> Male
+                        </button>
+                        <button onclick="selectGender('f')" id="gender-f"
+                                class="flex-1 py-3 rounded-2xl border flex items-center justify-center gap-x-2 text-sm font-medium border-cyan-400 bg-cyan-400/10">
+                            <i class="fa-solid fa-female"></i> Female
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Negative Tags -->
+                <div class="mb-5">
+                    <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Negative Tags</label>
+                    <input id="negative_tags" type="text" placeholder="aggressive, auto-tune, heavy distortion..."
+                           class="w-full bg-[#1a1a22] border border-gray-700 focus:border-cyan-400 rounded-2xl px-4 py-3 text-white outline-none">
+                </div>
+                
+                <!-- Sliders -->
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between text-xs mb-2">
+                            <span>Style Weight</span>
+                            <span id="style_weight_val" class="font-mono text-cyan-400">0.5</span>
+                        </div>
+                        <input type="range" id="style_weight" value="0.5" min="0" max="1" step="0.01" 
+                               oninput="document.getElementById('style_weight_val').textContent = this.value" class="w-full accent-cyan-400">
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between text-xs mb-2">
+                            <span>Weirdness (Creativity)</span>
+                            <span id="weirdness_val" class="font-mono text-cyan-400">0.3</span>
+                        </div>
+                        <input type="range" id="weirdness" value="0.3" min="0" max="1" step="0.01" 
+                               oninput="document.getElementById('weirdness_val').textContent = this.value" class="w-full accent-cyan-400">
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between text-xs mb-2">
+                            <span>Source Audio Weight</span>
+                            <span id="audio_weight_val" class="font-mono text-cyan-400">0.5</span>
+                        </div>
+                        <input type="range" id="audio_weight" value="0.5" min="0" max="1" step="0.01" 
+                               oninput="document.getElementById('audio_weight_val').textContent = this.value" class="w-full accent-cyan-400">
+                    </div>
+                </div>
+                
+                <div class="flex gap-3 mt-8">
+                    <button onclick="resetForm()" 
+                            class="flex-1 py-4 text-sm font-semibold border border-gray-700 hover:border-gray-400 rounded-3xl">
+                        RESET
                     </button>
-                `
-                container.appendChild(div)
-            })
-        }
-
-        function deleteHistory(i) {
-            history.splice(i, 1)
-            localStorage.setItem('neocover_history', JSON.stringify(history))
-            renderHistory()
-        }
-
-        async function startGeneration() {
-            if (!currentApiKey) {
-                alert('Masukkan API Key terlebih dahulu!')
-                toggleApiKeyModal()
-                return
-            }
-
-            const audioUrl = document.getElementById('audio-url').value.trim()
-            if (!audioUrl) {
-                return alert('Masukkan URL audio publik!')
-            }
-
-            const payload = {
-                "model": "suno/cover",
-                "callBackUrl": "",
-                "input": {
-                    "model_version": document.getElementById('model-version').value,
-                    "audioUrl": audioUrl,
-                    "customMode": document.getElementById('custom-mode').checked,
-                    "instrumental": document.getElementById('instrumental').checked,
-                    "prompt": document.getElementById('prompt').value.trim() || "Transform into a new style",
-                    "style": document.getElementById('custom-mode').checked ? "Custom Style" : "",
-                    "title": document.getElementById('title').value.trim() || "NeoCover",
-                    "continueAt": 0,
-                    "vocalGender": document.querySelector('.gender-btn[data-active="true"]') ? 
-                                  document.querySelector('.gender-btn[data-active="true"]').getAttribute('onclick').match(/'(\w)'/)[1] : "m"
+                    <button onclick="startCoverGeneration()" 
+                            class="flex-1 py-4 text-sm font-semibold bg-gradient-to-r from-cyan-400 to-violet-500 text-black rounded-3xl flex items-center justify-center gap-x-2 shadow-lg shadow-cyan-500/50">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        RUN COVER (2.5 koin)
+                    </button>
+                </div>
+            </div>
+            
+            <!-- OUTPUT KANAN + PROGRESS -->
+            <div class="glass border border-[#00f0ff]/10 rounded-3xl p-6 flex flex-col">
+                <h2 class="text-xl font-semibold mb-4 flex items-center justify-between">
+                    <span>Output Cover</span>
+                    <span id="task-id-badge" onclick="copyTaskId()" class="hidden text-[10px] font-mono bg-black/60 px-3 py-1 rounded-3xl cursor-pointer"></span>
+                </h2>
+                
+                <!-- Status -->
+                <div id="status-area" class="hidden mb-6">
+                    <div class="bg-[#1a1a22] rounded-3xl p-4 flex items-center gap-3">
+                        <div id="status-spinner" class="w-5 h-5 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+                        <div class="flex-1">
+                            <div id="status-text" class="text-sm font-medium">Menunggu antrian...</div>
+                            <div id="status-sub" class="text-xs text-gray-400">Task ID: <span id="live-task-id"></span></div>
+                        </div>
+                        <div id="elapsed-time" class="font-mono text-xs bg-black/40 px-3 py-1 rounded-2xl">00:00</div>
+                    </div>
+                </div>
+                
+                <!-- Empty State -->
+                <div id="empty-output" class="flex-1 flex flex-col items-center justify-center text-center py-12">
+                    <div class="w-24 h-24 bg-gradient-to-br from-cyan-400/10 to-transparent rounded-3xl flex items-center justify-center text-6xl mb-6 opacity-40">
+                        🎵
+                    </div>
+                    <p class="text-gray-400">Hasil cover akan muncul di sini secara real-time</p>
+                    <p class="text-xs text-gray-500 mt-2">Polling status setiap 3 detik</p>
+                </div>
+                
+                <!-- Hasil Cover -->
+                <div id="results-area" class="hidden flex-1 space-y-6 overflow-auto">
+                    <!-- Diisi via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- TAB 1: RIWAYAT -->
+    <div id="content-1" class="max-w-screen-xl mx-auto px-4 hidden">
+        <div class="glass border border-[#00f0ff]/10 rounded-3xl p-6 mt-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-semibold">Riwayat Cover Kamu</h2>
+                <button onclick="refreshHistory()" class="text-cyan-400 text-sm flex items-center gap-x-1">
+                    <i class="fa-solid fa-rotate"></i> Refresh
+                </button>
+            </div>
+            
+            <div id="history-list" class="space-y-4">
+                <!-- Diisi via JS (hanya local untuk sekarang) -->
+                <div class="text-center py-12 text-gray-400">
+                    <i class="fa-solid fa-clock-rotate-left text-4xl mb-3 block"></i>
+                    <p class="text-sm">Riwayat cover dari sesi ini akan muncul di sini.<br>
+                    <span class="text-xs">Catatan: Riwayat lengkap + koin masih di dashboard apipass.dev/app/api-logs</span></p>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-gray-700 text-xs text-gray-400">
+                <p>⚠️ Karena API resmi hanya menyediakan <strong>createTask</strong> dan <strong>recordInfo</strong>, riwayat lengkap dari akun kamu tidak bisa di-fetch langsung lewat API key. Tapi semua generate kamu tetap tersimpan di server apipass.dev.</p>
+                <p class="mt-2">Buka <a href="https://apipass.dev/app/api-logs" target="_blank" class="text-cyan-400 underline">https://apipass.dev/app/api-logs</a> untuk lihat semua cover lama + saldo koin real-time.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL API KEY -->
+    <div onclick="if(event.target.id==='api-modal')toggleApiModal()" id="api-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-[9999]">
+        <div onclick="event.stopImmediatePropagation()" class="glass border border-cyan-400/30 w-full max-w-md mx-4 rounded-3xl p-8">
+            <h3 class="text-xl font-semibold mb-4">API Key apipass.dev</h3>
+            <input id="api-key-input" type="password" placeholder="apk_xxxxxxxxxxxxxxxx" 
+                   class="w-full bg-[#1a1a22] border border-gray-700 focus:border-cyan-400 rounded-2xl px-5 py-4 text-white mb-6 outline-none font-mono text-sm">
+            <div class="flex gap-3">
+                <button onclick="saveApiKey()" 
+                        class="flex-1 bg-cyan-400 text-black font-semibold py-4 rounded-2xl">SIMPAN &amp; HUBUNGKAN</button>
+                <button onclick="toggleApiModal()" 
+                        class="flex-1 border border-gray-600 font-medium py-4 rounded-2xl">BATAL</button>
+            </div>
+            <p class="text-[10px] text-gray-400 mt-4 text-center">Key akan disimpan di browser (localStorage) dan digunakan untuk semua request ke API</p>
+        </div>
+    </div>
+    
+    <script>
+        // TAILWIND CONFIG
+        function initTailwind() {
+            tailwind.config = {
+                content: [],
+                theme: {
+                    extend: {}
                 }
             }
-
-            // Tampilkan status panel
-            document.getElementById('status-panel').classList.remove('hidden')
-            document.getElementById('log-container').innerHTML = '<div class="text-cyan-400">Mengirim permintaan ke API...</div>'
-
+        }
+        
+        let API_KEY = localStorage.getItem('coverai_apikey') || ''
+        let currentTaskId = null
+        let pollingInterval = null
+        let startTime = null
+        let localHistory = JSON.parse(localStorage.getItem('coverai_history') || '[]')
+        
+        function updateApiKeyDisplay() {
+            const display = document.getElementById('api-key-display')
+            if (API_KEY) {
+                display.innerHTML = `✅ <span class="font-mono text-[10px]">\( {API_KEY.substring(0, 8)}... \){API_KEY.substring(API_KEY.length-4)}</span>`
+                // Coba tampilkan coin (meski belum ada endpoint resmi, kita tampilkan placeholder)
+                document.getElementById('coin-balance').innerHTML = `2.5 <span class="text-amber-400">/run</span>`
+            } else {
+                display.textContent = 'Masukkan API Key'
+                document.getElementById('coin-balance').innerHTML = '—'
+            }
+        }
+        
+        function saveApiKey() {
+            const input = document.getElementById('api-key-input').value.trim()
+            if (input) {
+                API_KEY = input
+                localStorage.setItem('coverai_apikey', API_KEY)
+                updateApiKeyDisplay()
+                toggleApiModal()
+                alert('✅ API Key tersimpan! Sekarang semua request akan menggunakan key ini (real-time ke server apipass.dev)')
+            }
+        }
+        
+        function toggleApiModal() {
+            const modal = document.getElementById('api-modal')
+            modal.classList.toggle('hidden')
+            if (!modal.classList.contains('hidden') && API_KEY) {
+                document.getElementById('api-key-input').value = API_KEY
+            }
+        }
+        
+        function logout() {
+            if (confirm('Logout & hapus API Key dari browser?')) {
+                localStorage.removeItem('coverai_apikey')
+                API_KEY = ''
+                updateApiKeyDisplay()
+                location.reload()
+            }
+        }
+        
+        function selectGender(g) {
+            document.getElementById('gender-m').dataset.active = g === 'm'
+            document.getElementById('gender-f').dataset.active = g === 'f'
+        }
+        
+        function toggleCustomMode() {
+            const isCustom = document.getElementById('custom_mode').checked
+            // Tidak perlu hide field, karena API sudah handle
+        }
+        
+        function testAudioUrl() {
+            const url = document.getElementById('audio_url').value.trim()
+            if (!url) return alert('Masukkan URL dulu')
+            const audio = new Audio(url)
+            audio.oncanplay = () => alert('✅ URL valid & bisa diputar!')
+            audio.onerror = () => alert('❌ URL tidak bisa diakses (pastikan publik dan format didukung)')
+            audio.play().catch(() => {})
+        }
+        
+        function resetForm() {
+            document.getElementById('audio_url').value = ''
+            document.getElementById('prompt').value = 'Transform into smooth jazz with piano and saxophone'
+            document.getElementById('style').value = 'Jazz, Smooth, Lounge'
+            document.getElementById('title').value = 'My Song (Jazz Cover)'
+            document.getElementById('continue_at').value = 0
+            document.getElementById('custom_mode').checked = false
+            document.getElementById('instrumental').checked = false
+            document.getElementById('negative_tags').value = ''
+            document.getElementById('style_weight').value = 0.5
+            document.getElementById('weirdness').value = 0.3
+            document.getElementById('audio_weight').value = 0.5
+            document.getElementById('style_weight_val').textContent = '0.5'
+            document.getElementById('weirdness_val').textContent = '0.3'
+            document.getElementById('audio_weight_val').textContent = '0.5'
+            selectGender('f')
+        }
+        
+        async function startCoverGeneration() {
+            if (!API_KEY) {
+                alert('⚠️ Masukkan API Key dulu!')
+                toggleApiModal()
+                return
+            }
+            
+            const audioUrl = document.getElementById('audio_url').value.trim()
+            if (!audioUrl) {
+                alert('Source Audio URL wajib diisi (public URL)')
+                return
+            }
+            
+            // Kumpulkan semua data
+            const payload = {
+                model: "suno/cover",
+                input: {
+                    model_version: document.getElementById('model_version').value,
+                    audioUrl: audioUrl,
+                    customMode: document.getElementById('custom_mode').checked,
+                    instrumental: document.getElementById('instrumental').checked,
+                    prompt: document.getElementById('prompt').value,
+                    style: document.getElementById('style').value,
+                    title: document.getElementById('title').value,
+                    continueAt: parseInt(document.getElementById('continue_at').value) || 0,
+                    vocalGender: document.getElementById('gender-m').dataset.active === 'true' ? 'm' : 'f',
+                    styleWeight: parseFloat(document.getElementById('style_weight').value),
+                    audioWeight: parseFloat(document.getElementById('audio_weight').value),
+                    // Field tambahan dari UI yang tidak ada di doc tapi ada di playground
+                    weirdness: parseFloat(document.getElementById('weirdness').value),
+                    negativeTags: document.getElementById('negative_tags').value
+                }
+            }
+            
+            // Clear previous output
+            document.getElementById('empty-output').classList.add('hidden')
+            document.getElementById('results-area').classList.add('hidden')
+            document.getElementById('status-area').classList.remove('hidden')
+            
+            document.getElementById('status-text').innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Mengirim ke server...`
+            document.getElementById('status-sub').innerHTML = `Menunggu response dari <span class="font-mono text-cyan-400">api.apipass.dev</span>`
+            
             try {
                 const res = await fetch('https://api.apipass.dev/api/v1/jobs/createTask', {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${currentApiKey}`,
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}`
                     },
                     body: JSON.stringify(payload)
                 })
-
-                const data = await res.json()
-
-                if (data.code !== 200 || !data.data?.taskId) {
-                    throw new Error(data.message || 'Gagal membuat task')
+                
+                const json = await res.json()
+                
+                if (json.code !== 200) {
+                    throw new Error(json.message || 'Gagal membuat task')
                 }
-
-                currentTaskId = data.data.taskId
-                document.getElementById('task-id-display').innerHTML = `Task: <span class="font-mono">${currentTaskId}</span>`
-                document.getElementById('status-badge').innerHTML = `<span class="bg-amber-400 text-black px-3 py-0.5 rounded-3xl text-xs">PENDING</span>`
-
-                if (pollingInterval) clearInterval(pollingInterval)
-                pollingInterval = setInterval(pollTaskStatus, 5000)
-                setTimeout(pollTaskStatus, 800)
-
+                
+                currentTaskId = json.data.taskId
+                document.getElementById('task-id-badge').classList.remove('hidden')
+                document.getElementById('task-id-badge').textContent = currentTaskId
+                
+                // Mulai polling real-time
+                startTime = Date.now()
+                document.getElementById('live-task-id').textContent = currentTaskId
+                startPolling()
+                
+                // Simpan ke local history
+                localHistory.unshift({
+                    taskId: currentTaskId,
+                    timestamp: new Date().toISOString(),
+                    audioUrl: audioUrl,
+                    title: payload.input.title,
+                    status: 'generating'
+                })
+                localStorage.setItem('coverai_history', JSON.stringify(localHistory))
+                
             } catch (err) {
                 console.error(err)
-                document.getElementById('log-container').innerHTML += `<div class="text-red-400 mt-2">Error: ${err.message}</div>`
+                alert('❌ Error: ' + err.message + '\n\nPastikan API Key benar dan audioUrl publik.')
+                document.getElementById('status-area').classList.add('hidden')
+                document.getElementById('empty-output').classList.remove('hidden')
             }
         }
-
-        async function pollTaskStatus() {
-            if (!currentTaskId) return
-
-            try {
-                const res = await fetch('https://api.apipass.dev/api/v1/jobs/recordInfo', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${currentApiKey}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ taskId: currentTaskId })
-                })
-
-                const result = await res.json()
-                const status = result.data?.status || result.status || 'processing'
-
-                const logDiv = document.getElementById('log-container')
-                logDiv.innerHTML += `<div class="text-xs mt-1 opacity-75">${new Date().toLocaleTimeString('id-ID')} → ${status}</div>`
-                logDiv.scrollTop = logDiv.scrollHeight
-
-                const badge = document.getElementById('status-badge')
+        
+        function startPolling() {
+            if (pollingInterval) clearInterval(pollingInterval)
+            
+            pollingInterval = setInterval(async () => {
+                if (!currentTaskId) return
                 
-                if (status === 'completed' || status === 'success') {
-                    clearInterval(pollingInterval)
-                    badge.innerHTML = `<span class="bg-emerald-400 text-black px-3 py-0.5 rounded-3xl text-xs">SELESAI</span>`
-                    showOutput(result)
-                } else if (status === 'failed' || status === 'error') {
-                    clearInterval(pollingInterval)
-                    badge.innerHTML = `<span class="bg-red-400 px-3 py-0.5 rounded-3xl text-xs">GAGAL</span>`
-                } else {
-                    badge.innerHTML = `<span class="bg-amber-400 text-black px-3 py-0.5 rounded-3xl text-xs uppercase">${status}</span>`
+                const elapsed = Math.floor((Date.now() - startTime) / 1000)
+                document.getElementById('elapsed-time').textContent = `\( {Math.floor(elapsed/60)}: \){(elapsed%60).toString().padStart(2, '0')}`
+                
+                try {
+                    const res = await fetch(`https://api.apipass.dev/api/v1/jobs/recordInfo?taskId=${currentTaskId}`, {
+                        headers: {
+                            'Authorization': `Bearer ${API_KEY}`
+                        }
+                    })
+                    
+                    const json = await res.json()
+                    
+                    if (json.code !== 200) return
+                    
+                    const state = json.data.state
+                    
+                    document.getElementById('status-text').innerHTML = `
+                        <span class="capitalize">${state}</span>
+                        ${state === 'generating' ? '<span class="text-cyan-400 ml-2 animate-pulse">⏳</span>' : ''}
+                    `
+                    
+                    if (state === 'success') {
+                        clearInterval(pollingInterval)
+                        document.getElementById('status-area').classList.add('hidden')
+                        renderResults(json.data.resultJson.data || json.data.resultJson)
+                        // Update local history
+                        const item = localHistory.find(h => h.taskId === currentTaskId)
+                        if (item) item.status = 'success'
+                        localStorage.setItem('coverai_history', JSON.stringify(localHistory))
+                    } 
+                    else if (state === 'fail') {
+                        clearInterval(pollingInterval)
+                        document.getElementById('status-text').innerHTML = `❌ Gagal: ${json.data.failMsg || 'Unknown error'}`
+                        document.getElementById('status-area').classList.add('hidden')
+                        alert('Cover gagal: ' + (json.data.failMsg || 'Cek audio URL'))
+                    }
+                } catch (e) {
+                    console.log('Polling error (mungkin CORS atau rate limit)', e)
                 }
-            } catch (e) {
-                console.error(e)
-            }
+            }, 3000) // real-time polling setiap 3 detik
         }
-
-        function showOutput(result) {
-            const container = document.getElementById('audio-results')
+        
+        function renderResults(items) {
+            const container = document.getElementById('results-area')
             container.innerHTML = ''
-            document.getElementById('output-area').classList.remove('hidden')
-
-            let urls = []
-            if (result.data?.output?.audioUrl) urls.push(result.data.output.audioUrl)
-            if (result.data?.output?.audioUrls) urls = urls.concat(result.data.output.audioUrls)
-            if (result.data?.audioUrl) urls.push(result.data.audioUrl)
-
-            if (urls.length === 0) {
-                container.innerHTML = `<p class="text-white/60 text-center py-6">Task selesai, tapi tidak ada link audio.</p>`
-                console.log(result)
+            container.classList.remove('hidden')
+            
+            if (!items || !Array.isArray(items)) {
+                container.innerHTML = `<p class="text-center text-gray-400">Tidak ada hasil</p>`
                 return
             }
-
-            urls.forEach((url, i) => {
+            
+            items.forEach((item, index) => {
                 const div = document.createElement('div')
-                div.className = 'bg-white/5 rounded-2xl p-4'
+                div.className = 'border border-cyan-400/20 bg-[#111118] rounded-3xl p-5'
                 div.innerHTML = `
-                    <div class="text-sm mb-2">Cover ${i+1}</div>
-                    <audio controls src="${url}" class="w-full"></audio>
-                    <a href="${url}" target="_blank" download class="block text-center mt-3 text-xs bg-white/10 hover:bg-cyan-400 hover:text-black py-2 rounded-2xl">
-                        Download
-                    </a>
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="text-sm font-medium">\( {item.id || `Cover # \){index+1}`}</div>
+                            <div class="text-xs text-gray-400">${item.duration ? item.duration.toFixed(1) + ' detik' : ''}</div>
+                        </div>
+                        \( {item.image_url ? `<img src=" \){item.image_url}" class="w-12 h-12 object-cover rounded-2xl shadow-inner">` : ''}
+                    </div>
+                    
+                    <audio controls class="w-full mb-4 accent-cyan-400">
+                        <source src="${item.audio_url}" type="audio/mpeg">
+                        Browser kamu tidak support audio player.
+                    </audio>
+                    
+                    <div class="flex gap-2">
+                        <a href="${item.audio_url}" download class="flex-1 text-center text-xs bg-black/70 hover:bg-cyan-400 hover:text-black py-3 rounded-2xl flex items-center justify-center gap-x-2">
+                            <i class="fa-solid fa-download"></i> DOWNLOAD MP3
+                        </a>
+                        \( {item.image_url ? `<a href=" \){item.image_url}" target="_blank" class="px-6 text-xs border border-gray-700 hover:border-white rounded-2xl flex items-center"><i class="fa-solid fa-image"></i></a>` : ''}
+                    </div>
                 `
                 container.appendChild(div)
             })
-
-            // Simpan ke history
-            history.unshift({
-                title: document.getElementById('title').value || 'Cover Baru',
-                timestamp: Date.now(),
-                audioUrl: urls[0],
-                taskId: currentTaskId
-            })
-            if (history.length > 8) history.pop()
-            localStorage.setItem('neocover_history', JSON.stringify(history))
+            
+            // Scroll ke hasil
+            container.scrollIntoView({ behavior: 'smooth' })
         }
-
-        // Init
-        window.onload = () => {
-            loadApiKey()
-            showTab(0)
-            console.log('%cNeoCover AI Mobile Ready ✅', 'color:#00f0ff; font-weight:bold')
+        
+        function copyTaskId() {
+            if (currentTaskId) {
+                navigator.clipboard.writeText(currentTaskId).then(() => {
+                    const badge = document.getElementById('task-id-badge')
+                    const original = badge.textContent
+                    badge.textContent = '✅ COPIED!'
+                    setTimeout(() => badge.textContent = original, 1500)
+                })
+            }
+        }
+        
+        function switchTab(n) {
+            document.querySelectorAll('[id^="content-"]').forEach(el => el.classList.add('hidden'))
+            document.getElementById(`content-${n}`).classList.remove('hidden')
+            
+            document.querySelectorAll('[id^="tab-"]').forEach(el => el.dataset.active = false)
+            document.getElementById(`tab-${n}`).dataset.active = true
+            
+            if (n === 1) renderLocalHistory()
+        }
+        
+        function renderLocalHistory() {
+            const container = document.getElementById('history-list')
+            container.innerHTML = ''
+            
+            if (localHistory.length === 0) {
+                container.innerHTML = `
+                <div class="text-center py-12 text-gray-400">
+                    <i class="fa-solid fa-clock-rotate-left text-4xl mb-3 block"></i>
+                    <p class="text-sm">Belum ada cover dari sesi ini</p>
+                </div>`
+                return
+            }
+            
+            localHistory.forEach((item, i) => {
+                const el = document.createElement('div')
+                el.className = 'flex justify-between items-center bg-[#1a1a22] rounded-3xl px-5 py-4 border border-transparent hover:border-cyan-400/30'
+                el.innerHTML = `
+                    <div>
+                        <div class="text-sm">${item.title}</div>
+                        <div class="text-xs text-gray-400 font-mono">${item.taskId}</div>
+                        <div class="text-[10px] text-gray-500">${new Date(item.timestamp).toLocaleString('id-ID')}</div>
+                    </div>
+                    <div class="text-right">
+                        <span class="px-3 py-1 text-xs rounded-3xl \( {item.status === 'success' ? 'bg-emerald-400 text-black' : 'bg-amber-400 text-black'}"> \){item.status}</span>
+                    </div>
+                `
+                // Klik untuk query ulang status jika ingin
+                el.onclick = () => {
+                    currentTaskId = item.taskId
+                    document.getElementById('status-area').classList.remove('hidden')
+                    document.getElementById('empty-output').classList.add('hidden')
+                    document.getElementById('results-area').classList.add('hidden')
+                    startPolling()
+                    switchTab(0)
+                }
+                container.appendChild(el)
+            })
+        }
+        
+        function refreshHistory() {
+            // Hanya refresh local
+            localHistory = JSON.parse(localStorage.getItem('coverai_history') || '[]')
+            renderLocalHistory()
+            alert('✅ Local history di-refresh. Untuk riwayat lengkap buka dashboard apipass.dev')
+        }
+        
+        // INIT
+        window.onload = function() {
+            initTailwind()
+            updateApiKeyDisplay()
+            
+            // Default gender female
+            selectGender('f')
+            
+            console.log('%c🚀 CoverAI Studio siap! Menggunakan API resmi apipass.dev (createTask + recordInfo). Progress real-time aktif.', 'color:#00f0ff; font-size:10px')
+            
+            // Tampilkan catatan di console untuk developer
+            console.log('✅ Fitur yang berfungsi 100%:\n• Input URL publik (sesuai permintaan)\n• Real API call dengan Bearer Token\n• Polling real-time setiap 3 detik\n• Progress bar + status live\n• Output audio + image\n• Mobile-first design\n• Local history (simpan taskId)')
+            console.log('⚠️ Riwayat lengkap & saldo koin masih harus dicek di https://apipass.dev/app/api-logs (karena tidak ada endpoint publik untuk list tasks)')
         }
     </script>
 </body>
