@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
         
         :root {
             --primary: #00f0ff;
@@ -20,7 +20,7 @@
         }
         
         .glass {
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(20px);
         }
         
@@ -32,22 +32,18 @@
             box-shadow: 0 4px 20px -2px rgb(0 240 255);
         }
         
-        .slider-thumb {
-            appearance: none;
+        input[type="range"] {
+            accent-color: #00f0ff;
         }
         
-        .slider-thumb::-webkit-slider-thumb {
-            appearance: none;
-            height: 18px;
-            width: 18px;
-            background: #00f0ff;
-            border-radius: 9999px;
-            box-shadow: 0 0 15px #00f0ff;
+        .clickable {
             cursor: pointer;
+            user-select: none;
         }
     </style>
 </head>
 <body class="bg-[#0a0a0f] text-white font-sans min-h-screen pb-20">
+
     <!-- HEADER MOBILE -->
     <div class="mobile-header bg-[#111118] border-b border-[#00f0ff]/20 sticky top-0 z-50">
         <div class="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -62,9 +58,11 @@
                 </div>
             </div>
             
-            <!-- API Key -->
+            <!-- API Key & Coin -->
             <div class="flex items-center gap-x-3">
-                <div onclick="toggleApiModal()" class="flex items-center bg-[#1a1a22] hover:bg-[#22222a] text-xs px-4 h-9 rounded-3xl border border-[#00f0ff]/30 cursor-pointer">
+                <!-- Tombol API Key yang sudah diperbaiki -->
+                <div onclick="toggleApiModal()" 
+                     class="clickable flex items-center bg-[#1a1a22] hover:bg-[#22222a] text-xs px-4 h-9 rounded-3xl border border-[#00f0ff]/30 active:scale-95">
                     <i class="fa-solid fa-key mr-2 text-cyan-400"></i>
                     <span id="api-key-display" class="max-w-[120px] truncate">Masukkan API Key</span>
                 </div>
@@ -75,7 +73,8 @@
                     <span id="coin-balance" class="font-mono">—</span>
                 </div>
                 
-                <button onclick="logout()" class="w-9 h-9 bg-[#1a1a22] hover:bg-red-500/10 text-red-400 rounded-2xl flex items-center justify-center">
+                <button onclick="logout()" 
+                        class="w-9 h-9 bg-[#1a1a22] hover:bg-red-500/10 text-red-400 rounded-2xl flex items-center justify-center active:scale-95">
                     <i class="fa-solid fa-right-from-bracket"></i>
                 </button>
             </div>
@@ -83,11 +82,13 @@
         
         <!-- TABS -->
         <div class="max-w-screen-xl mx-auto px-4 flex border-t border-[#00f0ff]/10">
-            <button onclick="switchTab(0)" id="tab-0" class="flex-1 py-4 text-sm font-semibold flex items-center justify-center gap-x-2 border-b-2 border-transparent data-[active=true]:border-cyan-400 data-[active=true]:text-cyan-400">
+            <button onclick="switchTab(0)" id="tab-0" 
+                    class="flex-1 py-4 text-sm font-semibold flex items-center justify-center gap-x-2 border-b-2 border-transparent data-[active=true]:border-cyan-400 data-[active=true]:text-cyan-400">
                 <i class="fa-solid fa-sliders"></i>
                 <span>PLAYGROUND</span>
             </button>
-            <button onclick="switchTab(1)" id="tab-1" class="flex-1 py-4 text-sm font-semibold flex items-center justify-center gap-x-2 border-b-2 border-transparent data-[active=true]:border-cyan-400 data-[active=true]:text-cyan-400">
+            <button onclick="switchTab(1)" id="tab-1" 
+                    class="flex-1 py-4 text-sm font-semibold flex items-center justify-center gap-x-2 border-b-2 border-transparent data-[active=true]:border-cyan-400 data-[active=true]:text-cyan-400">
                 <i class="fa-solid fa-clock-rotate-left"></i>
                 <span>RIWAYAT COVER</span>
             </button>
@@ -117,7 +118,7 @@
                     </select>
                 </div>
                 
-                <!-- Source Audio URL (ganti dari upload) -->
+                <!-- Source Audio URL -->
                 <div class="mb-5">
                     <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2 flex items-center">
                         <span>Source Audio URL</span>
@@ -127,11 +128,11 @@
                         <input id="audio_url" type="url" placeholder="https://your-storage.com/song.mp3" 
                                class="flex-1 bg-[#1a1a22] border border-gray-700 focus:border-cyan-400 rounded-2xl px-4 py-3 text-white outline-none">
                         <button onclick="testAudioUrl()" 
-                                class="px-6 bg-[#1a1a22] hover:bg-cyan-400 hover:text-black border border-gray-700 rounded-2xl text-sm font-medium">
+                                class="px-6 bg-[#1a1a22] hover:bg-cyan-400 hover:text-black border border-gray-700 rounded-2xl text-sm font-medium active:scale-95">
                             <i class="fa-solid fa-circle-play"></i>
                         </button>
                     </div>
-                    <p class="text-[10px] text-gray-500 mt-1">Ganti dari upload file jadi link publik seperti di dokumentasi API</p>
+                    <p class="text-[10px] text-gray-500 mt-1">Link URL publik (bukan upload file)</p>
                 </div>
                 
                 <!-- Toggles -->
@@ -168,13 +169,11 @@
                 </div>
                 
                 <div class="grid grid-cols-2 gap-4 mb-5">
-                    <!-- Target Style -->
                     <div>
                         <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Target Style</label>
                         <input id="style" type="text" value="Jazz, Smooth, Lounge" 
                                class="w-full bg-[#1a1a22] border border-gray-700 focus:border-cyan-400 rounded-2xl px-4 py-3 text-white outline-none">
                     </div>
-                    <!-- Cover Title -->
                     <div>
                         <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Cover Title</label>
                         <input id="title" type="text" value="My Song (Jazz Cover)" 
@@ -182,7 +181,6 @@
                     </div>
                 </div>
                 
-                <!-- Start At -->
                 <div class="mb-5">
                     <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Start At (seconds)</label>
                     <input id="continue_at" type="number" value="0" min="0"
@@ -219,7 +217,7 @@
                             <span id="style_weight_val" class="font-mono text-cyan-400">0.5</span>
                         </div>
                         <input type="range" id="style_weight" value="0.5" min="0" max="1" step="0.01" 
-                               oninput="document.getElementById('style_weight_val').textContent = this.value" class="w-full accent-cyan-400">
+                               oninput="document.getElementById('style_weight_val').textContent = this.value">
                     </div>
                     
                     <div>
@@ -228,7 +226,7 @@
                             <span id="weirdness_val" class="font-mono text-cyan-400">0.3</span>
                         </div>
                         <input type="range" id="weirdness" value="0.3" min="0" max="1" step="0.01" 
-                               oninput="document.getElementById('weirdness_val').textContent = this.value" class="w-full accent-cyan-400">
+                               oninput="document.getElementById('weirdness_val').textContent = this.value">
                     </div>
                     
                     <div>
@@ -237,31 +235,31 @@
                             <span id="audio_weight_val" class="font-mono text-cyan-400">0.5</span>
                         </div>
                         <input type="range" id="audio_weight" value="0.5" min="0" max="1" step="0.01" 
-                               oninput="document.getElementById('audio_weight_val').textContent = this.value" class="w-full accent-cyan-400">
+                               oninput="document.getElementById('audio_weight_val').textContent = this.value">
                     </div>
                 </div>
                 
                 <div class="flex gap-3 mt-8">
                     <button onclick="resetForm()" 
-                            class="flex-1 py-4 text-sm font-semibold border border-gray-700 hover:border-gray-400 rounded-3xl">
+                            class="flex-1 py-4 text-sm font-semibold border border-gray-700 hover:border-gray-400 rounded-3xl active:scale-95">
                         RESET
                     </button>
                     <button onclick="startCoverGeneration()" 
-                            class="flex-1 py-4 text-sm font-semibold bg-gradient-to-r from-cyan-400 to-violet-500 text-black rounded-3xl flex items-center justify-center gap-x-2 shadow-lg shadow-cyan-500/50">
+                            class="flex-1 py-4 text-sm font-semibold bg-gradient-to-r from-cyan-400 to-violet-500 text-black rounded-3xl flex items-center justify-center gap-x-2 shadow-lg shadow-cyan-500/50 active:scale-95">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
                         RUN COVER (2.5 koin)
                     </button>
                 </div>
             </div>
             
-            <!-- OUTPUT KANAN + PROGRESS -->
+            <!-- OUTPUT KANAN -->
             <div class="glass border border-[#00f0ff]/10 rounded-3xl p-6 flex flex-col">
                 <h2 class="text-xl font-semibold mb-4 flex items-center justify-between">
                     <span>Output Cover</span>
-                    <span id="task-id-badge" onclick="copyTaskId()" class="hidden text-[10px] font-mono bg-black/60 px-3 py-1 rounded-3xl cursor-pointer"></span>
+                    <span id="task-id-badge" onclick="copyTaskId()" class="hidden text-[10px] font-mono bg-black/60 px-3 py-1 rounded-3xl cursor-pointer">Task ID</span>
                 </h2>
                 
-                <!-- Status -->
+                <!-- Status Area -->
                 <div id="status-area" class="hidden mb-6">
                     <div class="bg-[#1a1a22] rounded-3xl p-4 flex items-center gap-3">
                         <div id="status-spinner" class="w-5 h-5 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
@@ -284,7 +282,7 @@
                 
                 <!-- Hasil Cover -->
                 <div id="results-area" class="hidden flex-1 space-y-6 overflow-auto">
-                    <!-- Diisi via JS -->
+                    <!-- Diisi oleh JavaScript -->
                 </div>
             </div>
         </div>
@@ -301,17 +299,11 @@
             </div>
             
             <div id="history-list" class="space-y-4">
-                <!-- Diisi via JS (hanya local untuk sekarang) -->
-                <div class="text-center py-12 text-gray-400">
-                    <i class="fa-solid fa-clock-rotate-left text-4xl mb-3 block"></i>
-                    <p class="text-sm">Riwayat cover dari sesi ini akan muncul di sini.<br>
-                    <span class="text-xs">Catatan: Riwayat lengkap + koin masih di dashboard apipass.dev/app/api-logs</span></p>
-                </div>
+                <!-- Diisi oleh JavaScript -->
             </div>
             
             <div class="mt-8 pt-6 border-t border-gray-700 text-xs text-gray-400">
-                <p>⚠️ Karena API resmi hanya menyediakan <strong>createTask</strong> dan <strong>recordInfo</strong>, riwayat lengkap dari akun kamu tidak bisa di-fetch langsung lewat API key. Tapi semua generate kamu tetap tersimpan di server apipass.dev.</p>
-                <p class="mt-2">Buka <a href="https://apipass.dev/app/api-logs" target="_blank" class="text-cyan-400 underline">https://apipass.dev/app/api-logs</a> untuk lihat semua cover lama + saldo koin real-time.</p>
+                <p>⚠️ Riwayat lengkap &amp; saldo koin real-time ada di <a href="https://apipass.dev/app/api-logs" target="_blank" class="text-cyan-400 underline">Dashboard Apipass</a></p>
             </div>
         </div>
     </div>
@@ -320,126 +312,115 @@
     <div onclick="if(event.target.id==='api-modal')toggleApiModal()" id="api-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-[9999]">
         <div onclick="event.stopImmediatePropagation()" class="glass border border-cyan-400/30 w-full max-w-md mx-4 rounded-3xl p-8">
             <h3 class="text-xl font-semibold mb-4">API Key apipass.dev</h3>
-            <input id="api-key-input" type="password" placeholder="apk_xxxxxxxxxxxxxxxx" 
+            <input id="api-key-input" type="text" placeholder="apk_xxxxxxxxxxxxxxxx" 
                    class="w-full bg-[#1a1a22] border border-gray-700 focus:border-cyan-400 rounded-2xl px-5 py-4 text-white mb-6 outline-none font-mono text-sm">
             <div class="flex gap-3">
                 <button onclick="saveApiKey()" 
-                        class="flex-1 bg-cyan-400 text-black font-semibold py-4 rounded-2xl">SIMPAN &amp; HUBUNGKAN</button>
+                        class="flex-1 bg-cyan-400 text-black font-semibold py-4 rounded-2xl active:scale-95">SIMPAN &amp; HUBUNGKAN</button>
                 <button onclick="toggleApiModal()" 
-                        class="flex-1 border border-gray-600 font-medium py-4 rounded-2xl">BATAL</button>
+                        class="flex-1 border border-gray-600 font-medium py-4 rounded-2xl active:scale-95">BATAL</button>
             </div>
-            <p class="text-[10px] text-gray-400 mt-4 text-center">Key akan disimpan di browser (localStorage) dan digunakan untuk semua request ke API</p>
+            <p class="text-[10px] text-gray-400 mt-4 text-center">Key disimpan di browser kamu (localStorage)</p>
         </div>
     </div>
-    
+
     <script>
-        // TAILWIND CONFIG
-        function initTailwind() {
-            tailwind.config = {
-                content: [],
-                theme: {
-                    extend: {}
-                }
-            }
-        }
-        
-        let API_KEY = localStorage.getItem('coverai_apikey') || ''
-        let currentTaskId = null
-        let pollingInterval = null
-        let startTime = null
-        let localHistory = JSON.parse(localStorage.getItem('coverai_history') || '[]')
-        
+        let API_KEY = localStorage.getItem('coverai_apikey') || '';
+        let currentTaskId = null;
+        let pollingInterval = null;
+        let startTime = null;
+        let localHistory = JSON.parse(localStorage.getItem('coverai_history') || '[]');
+
         function updateApiKeyDisplay() {
-            const display = document.getElementById('api-key-display')
+            const display = document.getElementById('api-key-display');
             if (API_KEY) {
-                display.innerHTML = `✅ <span class="font-mono text-[10px]">\( {API_KEY.substring(0, 8)}... \){API_KEY.substring(API_KEY.length-4)}</span>`
-                // Coba tampilkan coin (meski belum ada endpoint resmi, kita tampilkan placeholder)
-                document.getElementById('coin-balance').innerHTML = `2.5 <span class="text-amber-400">/run</span>`
+                display.innerHTML = `✅ <span class="font-mono text-[10px]">\( {API_KEY.substring(0, 8)}... \){API_KEY.substring(API_KEY.length-4)}</span>`;
+                document.getElementById('coin-balance').innerHTML = `2.5 <span class="text-amber-400">/run</span>`;
             } else {
-                display.textContent = 'Masukkan API Key'
-                document.getElementById('coin-balance').innerHTML = '—'
+                display.textContent = 'Masukkan API Key';
+                document.getElementById('coin-balance').innerHTML = '—';
             }
         }
-        
-        function saveApiKey() {
-            const input = document.getElementById('api-key-input').value.trim()
-            if (input) {
-                API_KEY = input
-                localStorage.setItem('coverai_apikey', API_KEY)
-                updateApiKeyDisplay()
-                toggleApiModal()
-                alert('✅ API Key tersimpan! Sekarang semua request akan menggunakan key ini (real-time ke server apipass.dev)')
-            }
-        }
-        
+
         function toggleApiModal() {
-            const modal = document.getElementById('api-modal')
-            modal.classList.toggle('hidden')
+            const modal = document.getElementById('api-modal');
+            modal.classList.toggle('hidden');
             if (!modal.classList.contains('hidden') && API_KEY) {
-                document.getElementById('api-key-input').value = API_KEY
+                document.getElementById('api-key-input').value = API_KEY;
             }
         }
-        
+
+        function saveApiKey() {
+            const input = document.getElementById('api-key-input').value.trim();
+            if (!input) {
+                alert('API Key tidak boleh kosong!');
+                return;
+            }
+            API_KEY = input;
+            localStorage.setItem('coverai_apikey', API_KEY);
+            updateApiKeyDisplay();
+            toggleApiModal();
+            alert('✅ API Key berhasil disimpan!\nSekarang kamu bisa menjalankan cover.');
+        }
+
         function logout() {
-            if (confirm('Logout & hapus API Key dari browser?')) {
-                localStorage.removeItem('coverai_apikey')
-                API_KEY = ''
-                updateApiKeyDisplay()
-                location.reload()
+            if (confirm('Hapus API Key dan logout?')) {
+                localStorage.removeItem('coverai_apikey');
+                API_KEY = '';
+                updateApiKeyDisplay();
+                location.reload();
             }
         }
-        
+
         function selectGender(g) {
-            document.getElementById('gender-m').dataset.active = g === 'm'
-            document.getElementById('gender-f').dataset.active = g === 'f'
+            document.getElementById('gender-m').dataset.active = g === 'm' ? 'true' : 'false';
+            document.getElementById('gender-f').dataset.active = g === 'f' ? 'true' : 'false';
         }
-        
+
         function toggleCustomMode() {
-            const isCustom = document.getElementById('custom_mode').checked
-            // Tidak perlu hide field, karena API sudah handle
+            // Tidak perlu aksi khusus
         }
-        
+
         function testAudioUrl() {
-            const url = document.getElementById('audio_url').value.trim()
-            if (!url) return alert('Masukkan URL dulu')
-            const audio = new Audio(url)
-            audio.oncanplay = () => alert('✅ URL valid & bisa diputar!')
-            audio.onerror = () => alert('❌ URL tidak bisa diakses (pastikan publik dan format didukung)')
-            audio.play().catch(() => {})
+            const url = document.getElementById('audio_url').value.trim();
+            if (!url) return alert('Masukkan URL audio terlebih dahulu');
+            const audio = new Audio(url);
+            audio.oncanplay = () => alert('✅ URL audio valid!');
+            audio.onerror = () => alert('❌ URL tidak bisa diakses. Pastikan link publik dan format didukung (MP3, WAV, dll).');
+            audio.play().catch(() => {});
         }
-        
+
         function resetForm() {
-            document.getElementById('audio_url').value = ''
-            document.getElementById('prompt').value = 'Transform into smooth jazz with piano and saxophone'
-            document.getElementById('style').value = 'Jazz, Smooth, Lounge'
-            document.getElementById('title').value = 'My Song (Jazz Cover)'
-            document.getElementById('continue_at').value = 0
-            document.getElementById('custom_mode').checked = false
-            document.getElementById('instrumental').checked = false
-            document.getElementById('negative_tags').value = ''
-            document.getElementById('style_weight').value = 0.5
-            document.getElementById('weirdness').value = 0.3
-            document.getElementById('audio_weight').value = 0.5
-            document.getElementById('style_weight_val').textContent = '0.5'
-            document.getElementById('weirdness_val').textContent = '0.3'
-            document.getElementById('audio_weight_val').textContent = '0.5'
-            selectGender('f')
+            document.getElementById('audio_url').value = '';
+            document.getElementById('prompt').value = 'Transform into smooth jazz with piano and saxophone';
+            document.getElementById('style').value = 'Jazz, Smooth, Lounge';
+            document.getElementById('title').value = 'My Song (Jazz Cover)';
+            document.getElementById('continue_at').value = 0;
+            document.getElementById('custom_mode').checked = false;
+            document.getElementById('instrumental').checked = false;
+            document.getElementById('negative_tags').value = '';
+            document.getElementById('style_weight').value = 0.5;
+            document.getElementById('weirdness').value = 0.3;
+            document.getElementById('audio_weight').value = 0.5;
+            document.getElementById('style_weight_val').textContent = '0.5';
+            document.getElementById('weirdness_val').textContent = '0.3';
+            document.getElementById('audio_weight_val').textContent = '0.5';
+            selectGender('f');
         }
-        
+
         async function startCoverGeneration() {
             if (!API_KEY) {
-                alert('⚠️ Masukkan API Key dulu!')
-                toggleApiModal()
-                return
+                alert('⚠️ Masukkan API Key terlebih dahulu!');
+                toggleApiModal();
+                return;
             }
-            
-            const audioUrl = document.getElementById('audio_url').value.trim()
+
+            const audioUrl = document.getElementById('audio_url').value.trim();
             if (!audioUrl) {
-                alert('Source Audio URL wajib diisi (public URL)')
-                return
+                alert('Source Audio URL wajib diisi!');
+                return;
             }
-            
-            // Kumpulkan semua data
+
             const payload = {
                 model: "suno/cover",
                 input: {
@@ -454,20 +435,18 @@
                     vocalGender: document.getElementById('gender-m').dataset.active === 'true' ? 'm' : 'f',
                     styleWeight: parseFloat(document.getElementById('style_weight').value),
                     audioWeight: parseFloat(document.getElementById('audio_weight').value),
-                    // Field tambahan dari UI yang tidak ada di doc tapi ada di playground
                     weirdness: parseFloat(document.getElementById('weirdness').value),
                     negativeTags: document.getElementById('negative_tags').value
                 }
-            }
-            
-            // Clear previous output
-            document.getElementById('empty-output').classList.add('hidden')
-            document.getElementById('results-area').classList.add('hidden')
-            document.getElementById('status-area').classList.remove('hidden')
-            
-            document.getElementById('status-text').innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Mengirim ke server...`
-            document.getElementById('status-sub').innerHTML = `Menunggu response dari <span class="font-mono text-cyan-400">api.apipass.dev</span>`
-            
+            };
+
+            // Reset tampilan output
+            document.getElementById('empty-output').classList.add('hidden');
+            document.getElementById('results-area').classList.add('hidden');
+            document.getElementById('status-area').classList.remove('hidden');
+
+            document.getElementById('status-text').innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Mengirim ke server...`;
+
             try {
                 const res = await fetch('https://api.apipass.dev/api/v1/jobs/createTask', {
                     method: 'POST',
@@ -476,211 +455,181 @@
                         'Authorization': `Bearer ${API_KEY}`
                     },
                     body: JSON.stringify(payload)
-                })
-                
-                const json = await res.json()
-                
+                });
+
+                const json = await res.json();
+
                 if (json.code !== 200) {
-                    throw new Error(json.message || 'Gagal membuat task')
+                    throw new Error(json.message || 'Gagal membuat task');
                 }
-                
-                currentTaskId = json.data.taskId
-                document.getElementById('task-id-badge').classList.remove('hidden')
-                document.getElementById('task-id-badge').textContent = currentTaskId
-                
-                // Mulai polling real-time
-                startTime = Date.now()
-                document.getElementById('live-task-id').textContent = currentTaskId
-                startPolling()
-                
-                // Simpan ke local history
+
+                currentTaskId = json.data.taskId;
+                document.getElementById('task-id-badge').classList.remove('hidden');
+                document.getElementById('task-id-badge').textContent = currentTaskId;
+
+                startTime = Date.now();
+                document.getElementById('live-task-id').textContent = currentTaskId;
+                startPolling();
+
+                // Simpan ke history lokal
                 localHistory.unshift({
                     taskId: currentTaskId,
                     timestamp: new Date().toISOString(),
                     audioUrl: audioUrl,
                     title: payload.input.title,
                     status: 'generating'
-                })
-                localStorage.setItem('coverai_history', JSON.stringify(localHistory))
-                
+                });
+                localStorage.setItem('coverai_history', JSON.stringify(localHistory));
+
             } catch (err) {
-                console.error(err)
-                alert('❌ Error: ' + err.message + '\n\nPastikan API Key benar dan audioUrl publik.')
-                document.getElementById('status-area').classList.add('hidden')
-                document.getElementById('empty-output').classList.remove('hidden')
+                console.error(err);
+                alert('❌ Error: ' + err.message);
+                document.getElementById('status-area').classList.add('hidden');
+                document.getElementById('empty-output').classList.remove('hidden');
             }
         }
-        
+
         function startPolling() {
-            if (pollingInterval) clearInterval(pollingInterval)
-            
+            if (pollingInterval) clearInterval(pollingInterval);
+
             pollingInterval = setInterval(async () => {
-                if (!currentTaskId) return
-                
-                const elapsed = Math.floor((Date.now() - startTime) / 1000)
-                document.getElementById('elapsed-time').textContent = `\( {Math.floor(elapsed/60)}: \){(elapsed%60).toString().padStart(2, '0')}`
-                
+                if (!currentTaskId) return;
+
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                document.getElementById('elapsed-time').textContent = 
+                    `\( {Math.floor(elapsed/60)}: \){(elapsed%60).toString().padStart(2, '0')}`;
+
                 try {
                     const res = await fetch(`https://api.apipass.dev/api/v1/jobs/recordInfo?taskId=${currentTaskId}`, {
-                        headers: {
-                            'Authorization': `Bearer ${API_KEY}`
-                        }
-                    })
-                    
-                    const json = await res.json()
-                    
-                    if (json.code !== 200) return
-                    
-                    const state = json.data.state
-                    
-                    document.getElementById('status-text').innerHTML = `
-                        <span class="capitalize">${state}</span>
-                        ${state === 'generating' ? '<span class="text-cyan-400 ml-2 animate-pulse">⏳</span>' : ''}
-                    `
-                    
+                        headers: { 'Authorization': `Bearer ${API_KEY}` }
+                    });
+
+                    const json = await res.json();
+                    if (json.code !== 200) return;
+
+                    const state = json.data.state;
+                    document.getElementById('status-text').innerHTML = 
+                        `<span class="capitalize">${state}</span> ${state === 'generating' ? '<span class="text-cyan-400 ml-2 animate-pulse">⏳</span>' : ''}`;
+
                     if (state === 'success') {
-                        clearInterval(pollingInterval)
-                        document.getElementById('status-area').classList.add('hidden')
-                        renderResults(json.data.resultJson.data || json.data.resultJson)
-                        // Update local history
-                        const item = localHistory.find(h => h.taskId === currentTaskId)
-                        if (item) item.status = 'success'
-                        localStorage.setItem('coverai_history', JSON.stringify(localHistory))
+                        clearInterval(pollingInterval);
+                        document.getElementById('status-area').classList.add('hidden');
+                        renderResults(json.data.resultJson?.data || []);
                     } 
                     else if (state === 'fail') {
-                        clearInterval(pollingInterval)
-                        document.getElementById('status-text').innerHTML = `❌ Gagal: ${json.data.failMsg || 'Unknown error'}`
-                        document.getElementById('status-area').classList.add('hidden')
-                        alert('Cover gagal: ' + (json.data.failMsg || 'Cek audio URL'))
+                        clearInterval(pollingInterval);
+                        document.getElementById('status-text').innerHTML = `❌ Gagal: ${json.data.failMsg || 'Unknown error'}`;
+                        alert('Cover gagal: ' + (json.data.failMsg || 'Cek audio URL'));
                     }
                 } catch (e) {
-                    console.log('Polling error (mungkin CORS atau rate limit)', e)
+                    console.log('Polling error:', e);
                 }
-            }, 3000) // real-time polling setiap 3 detik
+            }, 3000);
         }
-        
+
         function renderResults(items) {
-            const container = document.getElementById('results-area')
-            container.innerHTML = ''
-            container.classList.remove('hidden')
-            
-            if (!items || !Array.isArray(items)) {
-                container.innerHTML = `<p class="text-center text-gray-400">Tidak ada hasil</p>`
-                return
+            const container = document.getElementById('results-area');
+            container.innerHTML = '';
+            container.classList.remove('hidden');
+
+            if (!items || items.length === 0) {
+                container.innerHTML = `<p class="text-center text-gray-400 py-10">Tidak ada hasil yang ditemukan</p>`;
+                return;
             }
-            
+
             items.forEach((item, index) => {
-                const div = document.createElement('div')
-                div.className = 'border border-cyan-400/20 bg-[#111118] rounded-3xl p-5'
+                const div = document.createElement('div');
+                div.className = 'border border-cyan-400/20 bg-[#111118] rounded-3xl p-5';
                 div.innerHTML = `
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <div class="text-sm font-medium">\( {item.id || `Cover # \){index+1}`}</div>
                             <div class="text-xs text-gray-400">${item.duration ? item.duration.toFixed(1) + ' detik' : ''}</div>
                         </div>
-                        \( {item.image_url ? `<img src=" \){item.image_url}" class="w-12 h-12 object-cover rounded-2xl shadow-inner">` : ''}
+                        \( {item.image_url ? `<img src=" \){item.image_url}" class="w-12 h-12 object-cover rounded-2xl">` : ''}
                     </div>
                     
                     <audio controls class="w-full mb-4 accent-cyan-400">
                         <source src="${item.audio_url}" type="audio/mpeg">
-                        Browser kamu tidak support audio player.
                     </audio>
                     
                     <div class="flex gap-2">
                         <a href="${item.audio_url}" download class="flex-1 text-center text-xs bg-black/70 hover:bg-cyan-400 hover:text-black py-3 rounded-2xl flex items-center justify-center gap-x-2">
                             <i class="fa-solid fa-download"></i> DOWNLOAD MP3
                         </a>
-                        \( {item.image_url ? `<a href=" \){item.image_url}" target="_blank" class="px-6 text-xs border border-gray-700 hover:border-white rounded-2xl flex items-center"><i class="fa-solid fa-image"></i></a>` : ''}
                     </div>
-                `
-                container.appendChild(div)
-            })
-            
-            // Scroll ke hasil
-            container.scrollIntoView({ behavior: 'smooth' })
+                `;
+                container.appendChild(div);
+            });
         }
-        
+
         function copyTaskId() {
             if (currentTaskId) {
-                navigator.clipboard.writeText(currentTaskId).then(() => {
-                    const badge = document.getElementById('task-id-badge')
-                    const original = badge.textContent
-                    badge.textContent = '✅ COPIED!'
-                    setTimeout(() => badge.textContent = original, 1500)
-                })
+                navigator.clipboard.writeText(currentTaskId);
+                const badge = document.getElementById('task-id-badge');
+                const original = badge.textContent;
+                badge.textContent = '✅ COPIED!';
+                setTimeout(() => badge.textContent = original, 1500);
             }
         }
-        
+
         function switchTab(n) {
-            document.querySelectorAll('[id^="content-"]').forEach(el => el.classList.add('hidden'))
-            document.getElementById(`content-${n}`).classList.remove('hidden')
+            document.querySelectorAll('[id^="content-"]').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`content-${n}`).classList.remove('hidden');
             
-            document.querySelectorAll('[id^="tab-"]').forEach(el => el.dataset.active = false)
-            document.getElementById(`tab-${n}`).dataset.active = true
+            document.querySelectorAll('[id^="tab-"]').forEach(el => el.dataset.active = 'false');
+            document.getElementById(`tab-${n}`).dataset.active = 'true';
             
-            if (n === 1) renderLocalHistory()
+            if (n === 1) renderLocalHistory();
         }
-        
+
         function renderLocalHistory() {
-            const container = document.getElementById('history-list')
-            container.innerHTML = ''
-            
+            const container = document.getElementById('history-list');
+            container.innerHTML = '';
+
             if (localHistory.length === 0) {
                 container.innerHTML = `
-                <div class="text-center py-12 text-gray-400">
-                    <i class="fa-solid fa-clock-rotate-left text-4xl mb-3 block"></i>
-                    <p class="text-sm">Belum ada cover dari sesi ini</p>
-                </div>`
-                return
+                    <div class="text-center py-12 text-gray-400">
+                        <i class="fa-solid fa-clock-rotate-left text-4xl mb-3 block"></i>
+                        <p>Belum ada riwayat cover di sesi ini</p>
+                    </div>`;
+                return;
             }
-            
-            localHistory.forEach((item, i) => {
-                const el = document.createElement('div')
-                el.className = 'flex justify-between items-center bg-[#1a1a22] rounded-3xl px-5 py-4 border border-transparent hover:border-cyan-400/30'
+
+            localHistory.forEach(item => {
+                const el = document.createElement('div');
+                el.className = 'flex justify-between items-center bg-[#1a1a22] rounded-3xl px-5 py-4 border border-transparent hover:border-cyan-400/30 cursor-pointer';
                 el.innerHTML = `
                     <div>
                         <div class="text-sm">${item.title}</div>
                         <div class="text-xs text-gray-400 font-mono">${item.taskId}</div>
                         <div class="text-[10px] text-gray-500">${new Date(item.timestamp).toLocaleString('id-ID')}</div>
                     </div>
-                    <div class="text-right">
-                        <span class="px-3 py-1 text-xs rounded-3xl \( {item.status === 'success' ? 'bg-emerald-400 text-black' : 'bg-amber-400 text-black'}"> \){item.status}</span>
-                    </div>
-                `
-                // Klik untuk query ulang status jika ingin
+                    <span class="px-3 py-1 text-xs rounded-3xl \( {item.status === 'success' ? 'bg-emerald-400 text-black' : 'bg-amber-400 text-black'}"> \){item.status}</span>
+                `;
                 el.onclick = () => {
-                    currentTaskId = item.taskId
-                    document.getElementById('status-area').classList.remove('hidden')
-                    document.getElementById('empty-output').classList.add('hidden')
-                    document.getElementById('results-area').classList.add('hidden')
-                    startPolling()
-                    switchTab(0)
-                }
-                container.appendChild(el)
-            })
+                    currentTaskId = item.taskId;
+                    switchTab(0);
+                    document.getElementById('status-area').classList.remove('hidden');
+                    document.getElementById('empty-output').classList.add('hidden');
+                    startPolling();
+                };
+                container.appendChild(el);
+            });
         }
-        
+
         function refreshHistory() {
-            // Hanya refresh local
-            localHistory = JSON.parse(localStorage.getItem('coverai_history') || '[]')
-            renderLocalHistory()
-            alert('✅ Local history di-refresh. Untuk riwayat lengkap buka dashboard apipass.dev')
+            localHistory = JSON.parse(localStorage.getItem('coverai_history') || '[]');
+            renderLocalHistory();
         }
-        
+
         // INIT
         window.onload = function() {
-            initTailwind()
-            updateApiKeyDisplay()
+            updateApiKeyDisplay();
+            selectGender('f');
             
-            // Default gender female
-            selectGender('f')
-            
-            console.log('%c🚀 CoverAI Studio siap! Menggunakan API resmi apipass.dev (createTask + recordInfo). Progress real-time aktif.', 'color:#00f0ff; font-size:10px')
-            
-            // Tampilkan catatan di console untuk developer
-            console.log('✅ Fitur yang berfungsi 100%:\n• Input URL publik (sesuai permintaan)\n• Real API call dengan Bearer Token\n• Polling real-time setiap 3 detik\n• Progress bar + status live\n• Output audio + image\n• Mobile-first design\n• Local history (simpan taskId)')
-            console.log('⚠️ Riwayat lengkap & saldo koin masih harus dicek di https://apipass.dev/app/api-logs (karena tidak ada endpoint publik untuk list tasks)')
-        }
+            console.log('%c✅ CoverAI Studio siap digunakan!', 'color:#00f0ff; font-size:12px');
+        };
     </script>
 </body>
 </html>
