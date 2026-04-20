@@ -24,30 +24,32 @@
                 <div class="text-xs text-cyan-400">Suno V5 Cover</div>
             </div>
         </div>
-        <div onclick="showApiModal()" class="flex items-center gap-2 bg-zinc-800 px-5 py-2 rounded-3xl text-sm cursor-pointer border border-zinc-700">
+        <div onclick="showApiModal()" class="flex items-center gap-2 bg-zinc-800 px-5 py-2 rounded-3xl text-sm cursor-pointer">
             <i class="fa-solid fa-key"></i>
-            <span id="api-status">Hubungkan API Key</span>
+            <span id="api-status" class="font-medium">Hubungkan API Key</span>
             <div id="api-dot" class="w-3 h-3 rounded-full bg-red-500"></div>
         </div>
     </div>
 
     <!-- Tabs -->
-    <div class="flex bg-zinc-900 border-b border-zinc-800">
-        <button onclick="switchTab(0)" id="tab0" class="flex-1 py-4 font-semibold border-b-2 border-cyan-400 text-cyan-400">Playground</button>
-        <button onclick="switchTab(1)" id="tab1" class="flex-1 py-4 font-semibold text-zinc-400">Riwayat Cover</button>
+    <div class="flex border-b border-zinc-800 bg-zinc-900">
+        <button onclick="switchTab(0)" id="tab-playground" 
+                class="flex-1 py-4 text-center font-semibold border-b-2 border-cyan-400 text-cyan-400">Playground</button>
+        <button onclick="switchTab(1)" id="tab-history" 
+                class="flex-1 py-4 text-center font-semibold text-zinc-400">Riwayat Cover</button>
     </div>
 
-    <!-- Playground -->
-    <div id="playground" class="p-5">
+    <!-- === PLAYGROUND PAGE === -->
+    <div id="page-playground" class="p-5">
         <div id="key-warning" class="hidden bg-amber-400/10 border border-amber-400 text-amber-400 p-4 rounded-2xl mb-6 text-sm">
             ⚠️ Masukkan API Key terlebih dahulu
         </div>
 
-        <form id="form" onsubmit="createTask(event)">
+        <form id="cover-form" onsubmit="createTask(event)">
             <div class="space-y-6">
 
                 <div>
-                    <label class="text-xs text-zinc-400 block mb-1">MODEL VERSION</label>
+                    <label class="text-xs text-zinc-400 mb-1 block">MODEL VERSION</label>
                     <select id="model_version" class="w-full bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-4">
                         <option value="V5">V5 (Latest)</option>
                         <option value="V4_5ALL">V4.5 All</option>
@@ -58,36 +60,36 @@
                 </div>
 
                 <div>
-                    <label class="text-xs text-zinc-400 block mb-1">SOURCE AUDIO URL (PUBLIC)</label>
-                    <input type="url" id="audioUrl" placeholder="https://example.com/lagu-anda.mp3" required
+                    <label class="text-xs text-zinc-400 mb-1 block">SOURCE AUDIO URL (PUBLIC)</label>
+                    <input type="url" id="audioUrl" placeholder="https://example.com/lagu-ori.mp3" required
                            class="w-full bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-4">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <label class="flex items-center gap-3 p-4 bg-zinc-900 border border-zinc-700 rounded-2xl">
-                        <input type="checkbox" id="customMode" class="accent-cyan-400 w-5 h-5">
-                        <span class="text-sm">Custom Mode</span>
+                        <input type="checkbox" id="customMode" class="accent-cyan-400">
+                        <span>Custom Mode</span>
                     </label>
                     <label class="flex items-center gap-3 p-4 bg-zinc-900 border border-zinc-700 rounded-2xl">
-                        <input type="checkbox" id="instrumental" class="accent-cyan-400 w-5 h-5">
-                        <span class="text-sm">Instrumental Only</span>
+                        <input type="checkbox" id="instrumental" class="accent-cyan-400">
+                        <span>Instrumental Only</span>
                     </label>
                 </div>
 
                 <div>
-                    <label class="text-xs text-zinc-400 block mb-1">COVER PROMPT</label>
-                    <textarea id="prompt" rows="3" placeholder="Transform into smooth jazz with piano and saxophone..."
+                    <label class="text-xs text-zinc-400 mb-1 block">COVER PROMPT</label>
+                    <textarea id="prompt" rows="3" placeholder="Transform into smooth jazz..." 
                               class="w-full bg-zinc-900 border border-zinc-700 rounded-3xl px-5 py-4"></textarea>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="text-xs text-zinc-400 block mb-1">TARGET STYLE</label>
+                        <label class="text-xs text-zinc-400 mb-1 block">TARGET STYLE</label>
                         <input type="text" id="style" value="Jazz, Smooth, Lounge" 
                                class="w-full bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-4">
                     </div>
                     <div>
-                        <label class="text-xs text-zinc-400 block mb-1">COVER TITLE</label>
+                        <label class="text-xs text-zinc-400 mb-1 block">COVER TITLE</label>
                         <input type="text" id="title" value="My Song (Pulse Cover)" 
                                class="w-full bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-4">
                     </div>
@@ -95,12 +97,12 @@
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="text-xs text-zinc-400 block mb-1">START AT (detik)</label>
-                        <input type="number" id="continueAt" value="0" min="0"
+                        <label class="text-xs text-zinc-400 mb-1 block">START AT (detik)</label>
+                        <input type="number" id="continueAt" value="0" min="0" 
                                class="w-full bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-4">
                     </div>
                     <div>
-                        <label class="text-xs text-zinc-400 block mb-1">VOCAL GENDER</label>
+                        <label class="text-xs text-zinc-400 mb-1 block">VOCAL GENDER</label>
                         <div class="flex gap-3">
                             <button type="button" id="gender-m" onclick="setGender('m')" class="flex-1 py-3 rounded-2xl border border-zinc-700">Male</button>
                             <button type="button" id="gender-f" onclick="setGender('f')" class="flex-1 py-3 rounded-2xl border border-cyan-400 bg-cyan-400/10 text-cyan-400">Female</button>
@@ -109,30 +111,30 @@
                 </div>
 
                 <div>
-                    <label class="text-xs text-zinc-400 block mb-1">NEGATIVE TAGS</label>
-                    <input type="text" id="negativeTags" placeholder="aggressive, auto-tune, heavy distortion..."
+                    <label class="text-xs text-zinc-400 mb-1 block">NEGATIVE TAGS</label>
+                    <input type="text" id="negativeTags" placeholder="aggressive, auto-tune..." 
                            class="w-full bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-4">
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="grid grid-cols-3 gap-6">
                     <div>
-                        <div class="flex justify-between text-xs mb-2"><span>Style Weight</span><span id="sw-val" class="font-mono">0.5</span></div>
+                        <div class="flex justify-between text-xs mb-1"><span>Style Weight</span><span id="sw-val">0.5</span></div>
                         <input type="range" id="styleWeight" min="0" max="1" step="0.05" value="0.5" 
-                               oninput="document.getElementById('sw-val').textContent=this.value" class="w-full accent-cyan-400">
+                               oninput="document.getElementById('sw-val').textContent = this.value" class="w-full accent-cyan-400">
                     </div>
                     <div>
-                        <div class="flex justify-between text-xs mb-2"><span>Weirdness</span><span id="weird-val" class="font-mono">0.3</span></div>
+                        <div class="flex justify-between text-xs mb-1"><span>Weirdness</span><span id="weird-val">0.3</span></div>
                         <input type="range" id="weirdness" min="0" max="1" step="0.05" value="0.3" 
-                               oninput="document.getElementById('weird-val').textContent=this.value" class="w-full accent-cyan-400">
+                               oninput="document.getElementById('weird-val').textContent = this.value" class="w-full accent-cyan-400">
                     </div>
                     <div>
-                        <div class="flex justify-between text-xs mb-2"><span>Source Audio Weight</span><span id="aw-val" class="font-mono">0.5</span></div>
+                        <div class="flex justify-between text-xs mb-1"><span>Audio Weight</span><span id="aw-val">0.5</span></div>
                         <input type="range" id="audioWeight" min="0" max="1" step="0.05" value="0.5" 
-                               oninput="document.getElementById('aw-val').textContent=this.value" class="w-full accent-cyan-400">
+                               oninput="document.getElementById('aw-val').textContent = this.value" class="w-full accent-cyan-400">
                     </div>
                 </div>
 
-                <div class="flex gap-4 pt-4">
+                <div class="flex gap-4 pt-6">
                     <button type="button" onclick="resetForm()" class="flex-1 py-5 border border-zinc-700 rounded-3xl font-medium">RESET</button>
                     <button type="submit" class="flex-1 py-5 bg-gradient-to-r from-cyan-400 to-violet-500 text-zinc-950 font-bold rounded-3xl">RUN COVER</button>
                 </div>
@@ -140,37 +142,42 @@
         </form>
     </div>
 
-    <!-- Riwayat -->
-    <div id="history" class="p-5 hidden">
-        <p class="text-xs text-zinc-400 mb-6">Riwayat hanya menyimpan cover yang dibuat di halaman ini (local browser).</p>
+    <!-- === RIWAYAT PAGE === -->
+    <div id="page-history" class="p-5 hidden">
+        <p class="text-xs text-zinc-400 mb-6">
+            Hanya menampilkan cover yang dibuat melalui halaman ini (disimpan di browser).<br>
+            Untuk riwayat lengkap & sisa koin, buka dashboard apipass.dev
+        </p>
         <div id="history-list" class="space-y-4"></div>
-        <button onclick="window.open('https://apipass.dev/app/logs','_blank')" class="mt-10 w-full py-4 border border-zinc-700 rounded-3xl flex items-center justify-center gap-2">
+
+        <button onclick="window.open('https://apipass.dev/app/logs','_blank')" 
+                class="mt-10 w-full py-4 border border-zinc-700 rounded-3xl flex items-center justify-center gap-2 text-sm">
             <i class="fa-solid fa-external-link-alt"></i> Lihat Riwayat Lengkap di Apipass
         </button>
     </div>
 
 </div>
 
-<!-- Modal Progress / Result -->
+<!-- Modal -->
 <div id="modal" class="hidden fixed inset-0 bg-black/90 z-[100] flex items-center justify-center p-5">
     <div class="bg-zinc-900 rounded-3xl p-6 w-full max-w-md">
         <div id="progress-area">
-            <p id="modal-status" class="text-center text-cyan-400 mb-6">Mengirim task...</p>
-            <div class="flex justify-center gap-1 my-10">
-                <div class="w-3 h-10 bg-cyan-400 rounded animate-pulse"></div>
-                <div class="w-3 h-10 bg-cyan-400 rounded animate-pulse delay-150"></div>
-                <div class="w-3 h-10 bg-cyan-400 rounded animate-pulse delay-300"></div>
+            <p id="modal-text" class="text-cyan-400 text-center mb-8">Mengirim task...</p>
+            <div class="flex justify-center gap-2 my-12">
+                <div class="w-2 h-10 bg-cyan-400 rounded animate-pulse"></div>
+                <div class="w-2 h-10 bg-cyan-400 rounded animate-pulse delay-150"></div>
+                <div class="w-2 h-10 bg-cyan-400 rounded animate-pulse delay-300"></div>
             </div>
         </div>
-        <div id="result-area" class="hidden space-y-6"></div>
-        <button onclick="closeModal()" class="w-full mt-6 py-4 border border-zinc-700 rounded-3xl">Tutup</button>
+        <div id="result-area" class="hidden"></div>
+        <button onclick="closeModal()" class="w-full py-4 border border-zinc-700 rounded-3xl mt-6">Tutup</button>
     </div>
 </div>
 
 <!-- API Key Modal -->
-<div id="api-modal" class="hidden fixed inset-0 bg-black/80 z-[200] flex items-center justify-center p-5">
+<div id="api-modal" onclick="if(event.target.id==='api-modal')hideApiModal()" class="hidden fixed inset-0 bg-black/80 z-[200] flex items-center justify-center p-5">
     <div class="bg-zinc-900 rounded-3xl p-8 w-full max-w-md">
-        <h3 class="text-xl font-semibold mb-2">API Key</h3>
+        <h3 class="text-xl font-semibold mb-4">Masukkan API Key</h3>
         <input id="key-input" type="password" placeholder="apk_1445..." class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 mb-6">
         <div class="flex gap-4">
             <button onclick="hideApiModal()" class="flex-1 py-4 border border-zinc-700 rounded-2xl">Batal</button>
@@ -185,14 +192,14 @@ let currentTaskId = null;
 let pollInterval = null;
 let historyData = JSON.parse(localStorage.getItem('pulsecover_history') || '[]');
 
-function updateApiStatus() {
+function updateApiUI() {
     const status = document.getElementById('api-status');
     const dot = document.getElementById('api-dot');
     const warn = document.getElementById('key-warning');
     if (apiKey) {
         status.textContent = 'Terhubung';
         status.classList.add('text-emerald-400');
-        dot.classList.replace('bg-red-500','bg-emerald-400');
+        dot.classList.replace('bg-red-500', 'bg-emerald-400');
         warn.classList.add('hidden');
     } else {
         warn.classList.remove('hidden');
@@ -207,18 +214,18 @@ function saveApiKey() {
     if (val) {
         apiKey = val;
         localStorage.setItem('pulsecover_key', apiKey);
-        updateApiStatus();
+        updateApiUI();
         hideApiModal();
     }
 }
 
 function setGender(g) {
-    document.getElementById('gender-m').classList.toggle('border-cyan-400', g==='m');
-    document.getElementById('gender-f').classList.toggle('border-cyan-400', g==='f');
+    document.getElementById('gender-m').classList.toggle('border-cyan-400', g === 'm');
+    document.getElementById('gender-f').classList.toggle('border-cyan-400', g === 'f');
 }
 
 function resetForm() {
-    document.getElementById('form').reset();
+    document.getElementById('cover-form').reset();
     document.getElementById('styleWeight').value = 0.5;
     document.getElementById('weirdness').value = 0.3;
     document.getElementById('audioWeight').value = 0.5;
@@ -230,7 +237,7 @@ function resetForm() {
 
 async function createTask(e) {
     e.preventDefault();
-    if (!apiKey) return alert('Masukkan API Key dulu!');
+    if (!apiKey) return alert('Masukkan API Key terlebih dahulu!');
 
     const payload = {
         model: "suno/cover",
@@ -253,39 +260,32 @@ async function createTask(e) {
 
     document.getElementById('modal').classList.remove('hidden');
     document.getElementById('result-area').classList.add('hidden');
-    document.getElementById('modal-status').textContent = 'Mengirim task ke server...';
+    document.getElementById('modal-text').textContent = 'Mengirim task...';
 
     try {
         const res = await fetch('https://api.apipass.dev/api/v1/jobs/createTask', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
             body: JSON.stringify(payload)
         });
 
         const data = await res.json();
-
-        if (data.code !== 200) {
-            throw new Error(data.message || 'Gagal membuat task');
-        }
+        if (data.code !== 200) throw new Error(data.message || 'Gagal membuat task');
 
         currentTaskId = data.data.taskId;
 
-        // Simpan ke riwayat lokal
         historyData.unshift({
             taskId: currentTaskId,
-            title: payload.input.title || 'Untitled',
+            title: payload.input.title || 'Untitled Cover',
             date: new Date().toISOString()
         });
         localStorage.setItem('pulsecover_history', JSON.stringify(historyData));
 
-        document.getElementById('modal-status').textContent = `Task ID: ${currentTaskId}\nSedang diproses...`;
+        document.getElementById('modal-text').textContent = `Task ID: ${currentTaskId}\nSedang diproses...`;
         startPolling();
 
     } catch (err) {
-        document.getElementById('modal-status').innerHTML = `Error: ${err.message}<br><br>Coba lagi nanti.<br>(Service apipass kadang sementara unavailable)`;
+        document.getElementById('modal-text').innerHTML = `Error: ${err.message}<br><br>Coba lagi nanti (Service apipass kadang down)`;
     }
 }
 
@@ -295,9 +295,9 @@ function startPolling() {
 
     pollInterval = setInterval(async () => {
         attempts++;
-        if (attempts > 50) {
+        if (attempts > 40) {
             clearInterval(pollInterval);
-            document.getElementById('modal-status').textContent = 'Waktu habis. Cek dashboard apipass.dev';
+            document.getElementById('modal-text').textContent = 'Waktu habis. Cek dashboard apipass';
             return;
         }
 
@@ -312,7 +312,7 @@ function startPolling() {
                 showResult(data.data.resultJson);
             } else if (data.data.state === 'fail') {
                 clearInterval(pollInterval);
-                document.getElementById('modal-status').textContent = `Gagal: ${data.data.failMsg || 'Unknown'}`;
+                document.getElementById('modal-text').textContent = `Gagal: ${data.data.failMsg || 'Unknown'}`;
             }
         } catch(e) {}
     }, 3500);
@@ -320,15 +320,14 @@ function startPolling() {
 
 function showResult(resultJson) {
     const container = document.getElementById('result-area');
-    container.innerHTML = `<p class="text-emerald-400 font-medium">Cover berhasil dibuat!</p>`;
+    container.innerHTML = '<p class="text-emerald-400 font-medium mb-4">Cover berhasil!</p>';
     
-    (resultJson.data || []).forEach((item, i) => {
+    (resultJson.data || []).forEach(item => {
         const div = document.createElement('div');
-        div.className = "border border-zinc-700 rounded-2xl p-4";
+        div.className = "border border-zinc-700 rounded-2xl p-4 mb-6";
         div.innerHTML = `
             <img src="${item.image_url}" class="w-full rounded-xl mb-4">
-            <audio controls class="w-full mb-4"><source src="${item.audio_url}" type="audio/mpeg"></audio>
-            <a href="\( {item.audio_url}" download class="block text-center py-3 border border-emerald-400 text-emerald-400 rounded-2xl">Download Audio # \){i+1}</a>
+            <audio controls class="w-full"><source src="${item.audio_url}" type="audio/mpeg"></audio>
         `;
         container.appendChild(div);
     });
@@ -345,34 +344,43 @@ function closeModal() {
 }
 
 function switchTab(n) {
-    document.getElementById('playground').classList.toggle('hidden', n !== 0);
-    document.getElementById('history').classList.toggle('hidden', n !== 1);
-    document.getElementById('tab0').classList.toggle('border-cyan-400', n===0);
-    document.getElementById('tab0').classList.toggle('text-cyan-400', n===0);
-    document.getElementById('tab1').classList.toggle('border-cyan-400', n===1);
-    document.getElementById('tab1').classList.toggle('text-cyan-400', n===1);
-    if (n===1) renderHistory();
+    document.getElementById('page-playground').classList.toggle('hidden', n !== 0);
+    document.getElementById('page-history').classList.toggle('hidden', n !== 1);
+
+    document.getElementById('tab-playground').classList.toggle('border-cyan-400', n === 0);
+    document.getElementById('tab-playground').classList.toggle('text-cyan-400', n === 0);
+    document.getElementById('tab-history').classList.toggle('border-cyan-400', n === 1);
+    document.getElementById('tab-history').classList.toggle('text-cyan-400', n === 1);
+
+    if (n === 1) renderHistory();
 }
 
 function renderHistory() {
     const container = document.getElementById('history-list');
     container.innerHTML = '';
+
     if (historyData.length === 0) {
-        container.innerHTML = `<p class="text-zinc-400 text-center py-12">Belum ada riwayat</p>`;
+        container.innerHTML = `<p class="text-zinc-400 text-center py-12">Belum ada cover yang dibuat</p>`;
         return;
     }
+
     historyData.forEach(item => {
         const div = document.createElement('div');
         div.className = "bg-zinc-900 border border-zinc-700 rounded-2xl p-5";
-        div.innerHTML = `<div class="font-medium">\( {item.title}</div><div class="text-xs text-zinc-500"> \){item.taskId}</div>`;
+        div.innerHTML = `
+            <div class="font-medium">${item.title}</div>
+            <div class="text-xs text-zinc-500 mt-1">${item.taskId}</div>
+            <div class="text-xs text-zinc-600">${new Date(item.date).toLocaleString('id-ID')}</div>
+        `;
         container.appendChild(div);
     });
 }
 
 window.onload = () => {
-    updateApiStatus();
+    updateApiUI();
     setGender('f');
     renderHistory();
+    console.log('%cPulseCover v3 - Tab Riwayat sudah diperbaiki', 'color:#67e8f9');
 };
 </script>
 </body>
