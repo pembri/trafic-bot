@@ -2,464 +2,270 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Undangan Pernikahan</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rira Project - Jasa Pembuatan Undangan Digital</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
         /* --- STYLING DASAR --- */
         :root {
-            --primary-color: #839b85; 
-            --gold-accent: #c4a661;   
-            --bg-light: #f7f9f7;
-            --text-dark: #333333;
-            --text-muted: #666666;
+            --primary-color: #839b85; /* Sage Green elegan */
+            --gold-accent: #c4a661;   /* Aksen Emas */
+            --bg-light: #f9fbf9;
+            --text-dark: #2c3e50;
+            --text-muted: #666;
         }
 
         body, html {
             margin: 0;
             padding: 0;
             font-family: 'Poppins', sans-serif;
-            background-color: #e0e0e0;
+            background-color: #e9ecef;
             color: var(--text-dark);
             scroll-behavior: smooth;
         }
 
-        .app-container {
+        .container {
             max-width: 480px;
             margin: 0 auto;
             background-color: var(--bg-light);
             min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow-x: hidden;
         }
 
-        h1, h2, h3, .font-serif {
+        h1, h2, h3 {
             font-family: 'Playfair Display', serif;
-            font-weight: 600;
+            margin-top: 0;
         }
 
-        /* --- HERO / COVER SECTION --- */
-        #cover-section {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(rgba(247, 249, 247, 0.9), rgba(247, 249, 247, 0.95)), url('[URL_FOTO_BACKGROUND_COVER_OPSIONAL]') center/cover;
-            background-color: var(--bg-light);
-            z-index: 999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        /* --- HEADER / HERO SECTION --- */
+        .hero {
+            background-color: var(--primary-color);
+            color: white;
             text-align: center;
-            padding: 30px;
+            padding: 60px 20px 40px;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
         }
 
-        .cover-photo-circle {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin-bottom: 25px;
-            border: 3px solid var(--gold-accent);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-            background-color: #ddd;
-        }
-
-        .cover-photo-circle img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .cover-subtitle {
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-            color: var(--primary-color);
-            text-transform: uppercase;
+        .hero h1 {
+            font-size: 2.5rem;
             margin-bottom: 10px;
+            color: #fff;
         }
 
-        .cover-title {
-            font-size: 3.5rem;
-            color: var(--gold-accent);
-            margin: 10px 0;
-            line-height: 1.1;
-        }
-
-        .cover-date {
-            font-size: 1.1rem;
-            letter-spacing: 3px;
-            margin: 20px 0;
-            color: var(--text-dark);
-        }
-
-        .guest-box {
-            margin-top: 30px;
+        .hero p {
+            font-size: 0.95rem;
+            opacity: 0.9;
             margin-bottom: 25px;
         }
 
-        .guest-box p {
-            font-size: 0.85rem;
-            margin: 0;
-            color: var(--text-muted);
-        }
-
-        .guest-name {
-            font-size: 1.2rem;
-            font-weight: 500;
-            color: var(--text-dark);
-            margin-top: 8px;
-            padding: 5px 15px;
-            border-bottom: 1px solid var(--primary-color);
+        .btn-order {
             display: inline-block;
-        }
-
-        .btn-gold {
             background-color: var(--gold-accent);
-            color: #fff;
+            color: white;
             padding: 12px 30px;
-            border: none;
             border-radius: 30px;
-            font-size: 0.9rem;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 500;
-            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
             box-shadow: 0 4px 15px rgba(196, 166, 97, 0.4);
             transition: 0.3s;
         }
 
-        /* --- KONTEN UTAMA --- */
-        #main-content {
-            display: none;
-            padding-bottom: 80px;
+        /* --- FITUR SECTION --- */
+        .features {
+            padding: 40px 20px;
         }
 
-        .section-padding {
-            padding: 60px 20px;
+        .section-title {
             text-align: center;
-        }
-
-        .bg-green {
-            background-color: var(--primary-color);
-            color: #fff;
-        }
-        
-        .bg-green > h2, .bg-green > p {
-            color: #fff;
-        }
-
-        .circle-frame {
-            width: 200px;
-            height: 200px; 
-            margin: 0 auto 20px auto;
-            border-radius: 50%; 
-            overflow: hidden;
-            border: 5px solid #fff;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            background-color: #ddd;
-        }
-
-        .circle-frame img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .profile-name {
+            color: var(--primary-color);
             font-size: 1.8rem;
-            color: var(--gold-accent);
+            margin-bottom: 30px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .feature-item {
+            background: white;
+            padding: 20px 15px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            border: 1px solid #eee;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .feature-item h3 {
+            font-size: 0.9rem;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-dark);
             margin-bottom: 5px;
         }
 
-        .parent-name {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 0;
+        /* --- CARA PESAN --- */
+        .how-to {
+            background-color: #fff;
+            padding: 40px 20px;
+            margin-bottom: 40px;
         }
 
-        .event-card {
-            background: #fff;
-            padding: 30px 20px;
-            border-radius: 15px;
+        .step {
+            display: flex;
+            align-items: flex-start;
             margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-            border-top: 3px solid var(--primary-color);
-            color: var(--text-dark); 
         }
 
-        .event-card p {
-            color: var(--text-dark); 
-        }
-
-        .event-title {
-            font-size: 1.5rem;
-            color: var(--gold-accent);
-            margin-bottom: 15px;
-        }
-
-        .map-wrapper iframe {
-            width: 100%;
-            height: 250px;
-            border-radius: 10px;
-            border: none;
-            margin-bottom: 15px;
-        }
-
-        .quote-text {
-            font-size: 0.9rem;
-            line-height: 1.8;
-            font-style: italic;
-            color: var(--text-muted);
-            margin-top: 20px;
-        }
-
-        /* --- BOTTOM NAVIGATION --- */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 480px;
+        .step-number {
             background-color: var(--primary-color);
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            border-radius: 20px 20px 0 0;
-            z-index: 100;
-        }
-
-        .nav-item {
-            color: #fff;
-            text-decoration: none;
-            font-size: 0.75rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            opacity: 0.8;
-        }
-
-        .nav-item:hover, .nav-item.active {
-            opacity: 1;
-            font-weight: 500;
-        }
-
-        .nav-icon {
-            font-size: 1.2rem;
-            margin-bottom: 3px;
-        }
-
-        /* --- MUSIC CONTROL --- */
-        .music-control {
-            position: fixed;
-            bottom: 80px; /* di atas menu navigasi bawah */
-            right: 20px;
-            width: 45px;
-            height: 45px;
-            background-color: var(--gold-accent);
+            color: white;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
-            display: none; /* Disembunyikan dulu sampai undangan dibuka */
+            display: flex;
             justify-content: center;
             align-items: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-text h4 {
+            margin: 0 0 5px 0;
+            font-size: 1rem;
+        }
+
+        .step-text p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* --- FOOTER / CTA BOTTOM --- */
+        .footer-cta {
+            text-align: center;
+            padding: 40px 20px 60px;
+            background-color: var(--primary-color);
             color: white;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            cursor: pointer;
+        }
+
+        .footer-cta h2 {
+            color: white;
+        }
+
+        /* Tombol WA Mengambang */
+        .float-wa {
+            position: fixed;
+            bottom: 20px;
+            right: 50%;
+            transform: translateX(50%);
+            background-color: #25D366;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
             z-index: 1000;
+            width: max-content;
         }
 
-        .spin-animation {
-            animation: spin 3s linear infinite;
-        }
-
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
+        .float-wa img {
+            width: 20px;
+            margin-right: 8px;
         }
     </style>
 </head>
 <body>
 
-<div class="app-container">
+<div class="container">
 
-    <!-- AUDIO ELEMENT BACKSOUND (Disembunyikan) -->
-    <audio id="bg-music" loop>
-        <source src="https://github.com/pembri/undangan-online/raw/refs/heads/main/backsound/senandung-manis.mp3" type="audio/mpeg">
-    </audio>
-
-    <!-- TOMBOL KONTROL MUSIK -->
-    <div id="music-control" class="music-control spin-animation" onclick="toggleMusic()">
-        🎵
+    <!-- HERO SECTION -->
+    <div class="hero">
+        <h1>Rira Project</h1>
+        <p>Solusi Cerdas Buat Undangan Digital Tampil Elegan, Praktis, & Kekinian.</p>
+        
+        <!-- Ganti Nomor WA di href bawah ini -->
+        <a href="https://wa.me/6281234567890?text=Halo%20Rira%20Project,%20saya%20mau%20tanya-tanya%20soal%20pembuatan%20undangan%20online." class="btn-order" target="_blank">Konsultasi Sekarang</a>
     </div>
 
-    <!-- ================= COVER SECTION ================= -->
-    <div id="cover-section">
+    <!-- FITUR SECTION -->
+    <div class="features">
+        <h2 class="section-title">Fitur Spesial</h2>
+        <div class="feature-grid">
+            <div class="feature-item">
+                <div class="feature-icon">👤</div>
+                <h3>Nama Tamu Otomatis</h3>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🎵</div>
+                <h3>Autoplay Musik</h3>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📍</div>
+                <h3>Integrasi Google Maps</h3>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">⏱️</div>
+                <h3>Pengerjaan Cepat</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARA PESAN -->
+    <div class="how-to">
+        <h2 class="section-title">Cara Pemesanan</h2>
         
-        <!-- Foto Bulat di Atas -->
-        <div class="cover-photo-circle">
-            <img src="[URL_FOTO_COVER_DISINI]" alt="Foto Pasangan">
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-text">
+                <h4>Konsultasi via WhatsApp</h4>
+                <p>Klik tombol order dan chat admin kami untuk memilih desain template.</p>
+            </div>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-text">
+                <h4>Isi Formulir Data</h4>
+                <p>Admin akan memberikan form untuk diisi (nama, tanggal, foto, lokasi).</p>
+            </div>
         </div>
 
-        <div class="cover-subtitle">Pernikahan Dari</div>
-        <h1 class="cover-title font-serif">[NAMA WANITA]<br>&<br>[NAMA PRIA]</h1>
-        <div class="cover-date">[DD . MM . YYYY]</div>
-        
-        <div class="guest-box">
-            <p>Kepada Yth. Bapak/Ibu/Saudara/i</p>
-            <div id="nama-tamu" class="guest-name">Nama Tamu</div>
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-text">
+                <h4>Proses Pengerjaan</h4>
+                <p>Duduk manis, undangan kamu akan selesai dan siap disebar pakai link!</p>
+            </div>
         </div>
-
-        <button class="btn-gold" onclick="bukaUndangan()">Buka Undangan</button>
     </div>
 
-    <!-- ================= KONTEN UTAMA ================= -->
-    <div id="main-content">
-        
-        <!-- BAGIAN PROFIL -->
-        <section id="profil" class="section-padding">
-            <h2 class="font-serif" style="color: var(--primary-color); margin-bottom: 40px;">Mempelai</h2>
-            
-            <!-- Mempelai Wanita -->
-            <div class="circle-frame">
-                <img src="[URL_FOTO_WANITA_DISINI]" alt="Mempelai Wanita">
-            </div>
-            <h3 class="profile-name">[Nama Wanita Lengkap]</h3>
-            <p class="parent-name">Putri dari<br>Bapak [Nama Bapak] & Ibu [Nama Ibu]</p>
-            
-            <br><br>
-
-            <!-- Mempelai Pria -->
-            <div class="circle-frame">
-                <img src="[URL_FOTO_PRIA_DISINI]" alt="Mempelai Pria">
-            </div>
-            <h3 class="profile-name">[Nama Pria Lengkap]</h3>
-            <p class="parent-name">Putra dari<br>Bapak [Nama Bapak] & Ibu [Nama Ibu]</p>
-        </section>
-
-        <!-- BAGIAN ACARA -->
-        <section id="acara" class="section-padding bg-green">
-            <h2 class="font-serif">Rangkaian Acara</h2>
-            <p style="font-size: 0.85rem; margin-bottom: 30px; opacity: 0.9;">Dengan memohon rahmat Tuhan, kami mengundang Anda untuk hadir pada acara kami:</p>
-            
-            <div class="event-card">
-                <h3 class="event-title font-serif">Akad Nikah</h3>
-                <p><strong>[Hari, Tanggal Bulan Tahun]</strong></p>
-                <p>[Waktu Akad] - Selesai</p>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 15px;">
-                    <strong>[Nama Tempat/Gedung]</strong><br>
-                    [Alamat Lengkap Jalan, Kota]
-                </p>
-            </div>
-
-            <div class="event-card">
-                <h3 class="event-title font-serif">Resepsi</h3>
-                <p><strong>[Hari, Tanggal Bulan Tahun]</strong></p>
-                <p>[Waktu Resepsi] - Selesai</p>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 15px;">
-                    <strong>[Nama Tempat/Gedung]</strong><br>
-                    [Alamat Lengkap Jalan, Kota]
-                </p>
-            </div>
-        </section>
-
-        <!-- BAGIAN MAPS -->
-        <section id="lokasi" class="section-padding">
-            <h2 class="font-serif" style="color: var(--primary-color);">Peta Lokasi</h2>
-            
-            <div class="map-wrapper">
-                <iframe src="https://www.google.com/maps/embed?pb=..." allowfullscreen="" loading="lazy"></iframe>
-            </div>
-            
-            <a href="[LINK_GOOGLE_MAPS_ASLI]" target="_blank" style="text-decoration: none;">
-                <button class="btn-gold">Petunjuk Ke Lokasi</button>
-            </a>
-        </section>
-
-        <!-- BAGIAN KUTIPAN -->
-        <section id="kutipan" class="section-padding" style="background-color: #fff;">
-            <div class="circle-frame" style="height: 200px;">
-                <img src="[URL_FOTO_BERDUA_DISINI]" alt="Couple">
-            </div>
-            <p class="quote-text font-serif">
-                "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya..."
-            </p>
-            <p style="font-size: 0.8rem; font-weight: bold; color: var(--primary-color);">[SUMBER KUTIPAN]</p>
-        </section>
-
-        <!-- BOTTOM NAVIGATION BAR -->
-        <nav class="bottom-nav">
-            <a href="#profil" class="nav-item">
-                <span class="nav-icon">👤</span>
-                Profil
-            </a>
-            <a href="#acara" class="nav-item">
-                <span class="nav-icon">📅</span>
-                Acara
-            </a>
-            <a href="#lokasi" class="nav-item">
-                <span class="nav-icon">📍</span>
-                Lokasi
-            </a>
-        </nav>
-
+    <!-- FOOTER CTA -->
+    <div class="footer-cta">
+        <h2>Siap Bikin Undanganmu?</h2>
+        <p style="font-size: 0.9rem; margin-bottom: 20px;">Harga bersahabat, hasil maksimal. Yuk amankan slot pengerjaanmu sekarang.</p>
+        <p style="font-size: 0.8rem; opacity: 0.7;">&copy; 2026 Rira Project.</p>
     </div>
+
+    <!-- TOMBOL WA MENGAMBANG DI BAWAH -->
+    <!-- GANTI 6281234567890 DENGAN NOMOR WA ASLI LO -->
+    <a href="https://wa.me/6281234567890?text=Halo%20Rira%20Project,%20saya%20mau%20pesan%20undangan%20online." class="float-wa" target="_blank">
+        Order via WhatsApp
+    </a>
 
 </div>
-
-<script>
-    // FUNGSI 1: Format Slug URL ke Nama Tamu yang Rapi
-    function setNamaTamu() {
-        const urlParams = new URLSearchParams(window.location.search);
-        let namaDariUrl = urlParams.get('to');
-        
-        if (namaDariUrl) {
-            let namaRapi = namaDariUrl.replace(/[_-]/g, ' ');
-            namaRapi = namaRapi.replace(/\b\w/g, function(char) {
-                return char.toUpperCase();
-            });
-            document.getElementById('nama-tamu').innerText = namaRapi;
-        }
-    }
-
-    // FUNGSI 2: Transisi Buka Undangan & Play Musik
-    function bukaUndangan() {
-        let cover = document.getElementById('cover-section');
-        cover.style.transition = "opacity 0.8s ease";
-        cover.style.opacity = "0";
-        
-        // Memutar musik
-        let audio = document.getElementById("bg-music");
-        audio.play();
-
-        // Memunculkan tombol kontrol musik
-        document.getElementById('music-control').style.display = "flex";
-        
-        setTimeout(() => {
-            cover.style.display = "none";
-            document.getElementById('main-content').style.display = "block";
-            window.scrollTo(0, 0);
-        }, 800);
-    }
-
-    // FUNGSI 3: Pause / Play Musik
-    function toggleMusic() {
-        let audio = document.getElementById("bg-music");
-        let btn = document.getElementById("music-control");
-        
-        if (audio.paused) {
-            audio.play();
-            btn.classList.add("spin-animation"); // Muter lagi ikonnya
-            btn.innerHTML = "🎵";
-        } else {
-            audio.pause();
-            btn.classList.remove("spin-animation"); // Berhenti muter
-            btn.innerHTML = "🔇";
-        }
-    }
-
-    window.onload = setNamaTamu;
-</script>
 
 </body>
 </html>
